@@ -16,7 +16,7 @@ public:
 	
 
 private:
-	HRESULT _compileShaderFromFile(WCHAR* FileName, LPCSTR EntryPoint, LPCSTR ShaderModel, ID3DBlob** ppBlobOut);
+	HRESULT _compileShaderFromFile(const wchar_t* fileName, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** blobOut);
 
 	ID3D11Buffer* _vertexBuffer;
 	ID3D11InputLayout* _vertexLayout;

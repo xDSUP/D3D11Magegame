@@ -1,114 +1,147 @@
 #include "FirstRender.h"
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+#include <DirectXMathVector.inl>
+
+using namespace DirectX;
+
+struct SimpleVertex
+{
+	XMFLOAT3 Pos;
+};
 
 bool FirstRender::Init(HWND hwnd)
 {
 	HRESULT hr = S_OK;
 
-	RECT rc;
-	GetClientRect(hwnd, &rc);
-	UINT width = rc.right - rc.left;
-	UINT height = rc.bottom - rc.top;
-
-	UINT createDeviceFlags = 0;
-
-#ifdef _DEBUG
-	//createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-#endif
-
-	D3D_DRIVER_TYPE driverTypes[] =
+	// Компиляция вершинного шейдера
+	ID3DBlob* VSBlob = NULL;
+	hr = _compileShaderFromFile(L"shader.fx", "VS", "vs_4_0", &VSBlob);
+	if (FAILED(hr))
 	{
-		D3D_DRIVER_TYPE_HARDWARE,
-		D3D_DRIVER_TYPE_WARP,
-		D3D_DRIVER_TYPE_REFERENCE,
-	};
-	UINT numDriverTypes = ARRAYSIZE(driverTypes);
-	
-	D3D_FEATURE_LEVEL featureLevels[] = 
-	{
-		D3D_FEATURE_LEVEL_11_0,
-		D3D_FEATURE_LEVEL_10_1,
-		D3D_FEATURE_LEVEL_10_0
-	};
-	UINT numFeatureLevels = ARRAYSIZE(featureLevels);
-
-	DXGI_SWAP_CHAIN_DESC sd;
-	ZeroMemory(&sd, sizeof(sd));	// очищаем структуру
-	sd.BufferCount = 1;				// у нас один задний буфер
-	sd.BufferDesc.Width = width;	// устанвливаем ширину буфера
-	sd.BufferDesc.Height = height;	// и высоту
-	sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM; // формат пикселя
-	sd.BufferDesc.RefreshRate.Numerator = 60; // частота обновления экрана
-	sd.BufferDesc.RefreshRate.Denominator = 1;
-	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // назначение буфера
-	sd.OutputWindow = hwnd;			// дескриптор окна
-	sd.SampleDesc.Count = 1;
-	sd.SampleDesc.Quality = 0;
-	sd.Windowed = TRUE;				// устанавливает оконный режим
-
-	for (UINT i = 0; i < numDriverTypes; i++)
-	{
-		_driverType = driverTypes[i];
-		hr = D3D11CreateDeviceAndSwapChain(
-			NULL, _driverType, NULL,
-			createDeviceFlags, featureLevels,
-			numFeatureLevels, 
-			D3D11_SDK_VERSION,
-			&sd, &_swapChain, &_device,
-			&_featureLevel,	&_context
-		);
-		if (SUCCEEDED(hr))
-			break;
+		sLog->Err("Невозможно скомпилировать файл shader.fx. Пожалуйста, запустите данную программу из папки, содержащей этот файл");
+		return false;
 	}
+
+	// Создание вершинного шейдера
+	hr = _device->CreateVertexShader(
+		VSBlob->GetBufferPointer(),
+		VSBlob->GetBufferSize(), NULL, &_vertexShader
+	);
+	if (FAILED(hr))
+	{
+		sLog->Err("Не удалось создать вершинный шейдер");
+		_RELEASE(VSBlob);
+		return false;
+	}
+	// определение входного формата
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{ "POSITION", 0,
+			DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+			D3D11_INPUT_PER_VERTEX_DATA, 0 }
+	};
+
+	UINT numElements = ARRAYSIZE(layout);
+	// создание входного формата
+	hr = _device->CreateInputLayout(layout, numElements,
+		VSBlob->GetBufferPointer(),
+		VSBlob->GetBufferSize(), &_vertexLayout);
+	_RELEASE(VSBlob);
 	if (FAILED(hr))
 		return false;
 
-	ID3D11Texture2D* backBuffer = NULL;
-	hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), 
-		(LPVOID*)&backBuffer);
+	// установка входного формата
+	_context->IASetInputLayout(_vertexLayout);
+
+	// Компиляция пиксельного шейдера
+	ID3DBlob* pSBlob = NULL;
+	hr = _compileShaderFromFile(L"shader.fx", "PS", "ps_4_0", &pSBlob);
+	if (FAILED(hr))
+	{
+		sLog->Err("Невозможно скомпилировать файл shader.fx. Пожалуйста, запустите данную программу из папки, содержащей этот файл");
+		return false;
+	}
+
+	// Создание пискельного шейдера
+	hr = _device->CreatePixelShader(pSBlob->GetBufferPointer(), pSBlob->GetBufferSize(), NULL, &_pixelShader);
+	if (FAILED(hr))
+	{
+		sLog->Err("Не удалось создать пиксельный шейдер");
+		_RELEASE(pSBlob);
+		return false;
+	}
+
+	// Создание буфера вершин
+	SimpleVertex verticles[] = {
+		XMFLOAT3(0.0f, 0.5f, 0.5f),
+		XMFLOAT3(0.5f, -0.5f, 0.5f),
+		XMFLOAT3(-0.5f, -0.5f, 0.5f)
+	};
+
+	D3D11_BUFFER_DESC bd;
+	ZeroMemory(&bd, sizeof(bd));
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(SimpleVertex) * 3;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA data;
+	ZeroMemory(&data, sizeof(data));
+	data.pSysMem = verticles;
+
+	hr = _device->CreateBuffer(&bd, &data, &_vertexBuffer);
 	if (FAILED(hr))
 		return false;
-	
-	hr = _device->CreateRenderTargetView(backBuffer, NULL, &_renderTargetView);
-	_RELEASE(backBuffer);
-	if (FAILED(hr))
-		return false;
-	// Здесь мы указываем цель рендера,
-	// в которую видеокарта будет рисовать полученую картинку.
-	_context->OMSetRenderTargets(1, &_renderTargetView, NULL);
 
+	// установка вершинного буфера
+	UINT stride = sizeof(SimpleVertex);
+	UINT offset = 0;
+	_context->IASetVertexBuffers(0, 1, &_vertexBuffer,
+		&stride, &offset);
+	// Установка топологии
+	_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// Вьюпорт определяет зону рисования.
-	// Здесь мы указываем что рисовать надо начиная из точки 0,0 (параметры TopLeftX и TopLeftY)
-	D3D11_VIEWPORT vp;
-	vp.Width = (FLOAT)width;
-	vp.Height = (FLOAT)height;
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0;
-	vp.TopLeftY = 0;
-	_context->RSSetViewports(1, &vp);
-	
 	return true;
 }
+	
+
 
 bool FirstRender::Draw()
 {
-	
+	_context->VSSetShader(_vertexShader, NULL, 0);
+	_context->PSSetShader(_pixelShader, NULL, 0);
+	_context->Draw(3, 0);
 	return true;
 }
 
 
 FirstRender::FirstRender()
 {
-	_driverType = D3D_DRIVER_TYPE_NULL;
-	_featureLevel = D3D_FEATURE_LEVEL_11_0;
-	_device = nullptr;
-	_context = nullptr;
-	_swapChain = nullptr;
-	_renderTargetView = nullptr;
+	_vertexShader = nullptr;
+	_vertexLayout = nullptr;
+	_vertexBuffer = nullptr;
+	_pixelShader = nullptr;
 }
 
 void FirstRender::Close()
 {
-	
+	_RELEASE(_vertexBuffer);
+	_RELEASE(_vertexLayout);
+	_RELEASE(_vertexShader);
+	_RELEASE(_pixelShader);
 }
+
+HRESULT FirstRender::_compileShaderFromFile(const wchar_t* fileName, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** blobOut)
+{
+	HRESULT hr = S_OK;
+	//D3DCompileFromFile()
+	hr = D3DX11CompileFromFileW(
+		fileName, NULL, NULL, 
+		entryPoint, shaderModel,
+		0, 0, NULL, blobOut, 
+		NULL, NULL
+	);
+	return hr;
+}
+

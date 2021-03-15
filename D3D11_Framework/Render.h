@@ -4,6 +4,17 @@ namespace D3D11_Framework
 {
 	//------------------------------------------------------------------
 
+//Input Assembler(IA) Stage
+//Vertex Shader(VS) Stage
+//Hull Shader(HS) Stage
+//Tessellator Shader(TS) Stage
+//Domain Shader(DS) Stage
+//Geometry Shader(GS) Stage
+//Stream Output(SO) Stage
+//Rasterizer(RS) Stage
+//Pixel Shader(PS) Stage
+//Output Merger(OM) Stage
+	
 	class Render
 	{
 	public:
@@ -35,7 +46,7 @@ namespace D3D11_Framework
 		virtual bool Draw() = 0;
 		virtual void Close() = 0;
 
-	private:
+	protected:
 		D3D_DRIVER_TYPE _driverType;
 		D3D_FEATURE_LEVEL _featureLevel;
 		/**

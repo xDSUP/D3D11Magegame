@@ -7,6 +7,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{a7ad7aee-4b0c-4a0d-81ee-b2128aab28d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{6b6ff054-9cc8-47de-a83c-4a4c1c475366}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
@@ -27,5 +30,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Direct Test V1.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Debug\shader.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
