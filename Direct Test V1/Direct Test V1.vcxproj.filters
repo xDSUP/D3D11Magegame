@@ -30,13 +30,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Direct Test V1.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\Debug\shader.fx">
+    <None Include="..\Debug\shader.fx">
       <Filter>Shaders</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>

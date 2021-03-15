@@ -135,13 +135,23 @@ void FirstRender::Close()
 HRESULT FirstRender::_compileShaderFromFile(const wchar_t* fileName, LPCSTR entryPoint, LPCSTR shaderModel, ID3DBlob** blobOut)
 {
 	HRESULT hr = S_OK;
+
+	DWORD shaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined( _DEBUG )
+	shaderFlags |= D3DCOMPILE_DEBUG;
+#endif
+	
 	//D3DCompileFromFile()
+	ID3DBlob* errorBlob;
 	hr = D3DX11CompileFromFileW(
 		fileName, NULL, NULL, 
 		entryPoint, shaderModel,
-		0, 0, NULL, blobOut, 
-		NULL, NULL
+		shaderFlags, 0, NULL, blobOut, 
+		&errorBlob, NULL
 	);
+	if (FAILED(hr) && errorBlob != NULL)
+		OutputDebugStringA((char*)errorBlob->GetBufferPointer());
+	_RELEASE(errorBlob);
 	return hr;
 }
 
