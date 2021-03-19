@@ -175,7 +175,9 @@ bool SecondRender::Draw()
 		dwTimeStart = dwTimeCur;
 	t = (dwTimeCur - dwTimeStart) / 1000.0f;
 
-	_world = XMMatrixRotationY(t) * XMMatrixRotationX(t);
+	_world = XMMatrixRotationY(t) * XMMatrixRotationX(t) * 
+		XMMatrixTranslation(2* cos(t) * sin(t), 2 * cos(t) * sin(t), 0);
+	
 
 	ConstantBuffer cb;
 	cb.mWorld = XMMatrixTranspose(_world);
