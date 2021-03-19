@@ -19,6 +19,9 @@
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SecondRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -27,11 +30,19 @@
     <ClInclude Include="FirstRender.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="SecondRender.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\Debug\shader.fx">
+    <None Include="Shader.dgsl">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader.fx">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

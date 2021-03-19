@@ -165,16 +165,19 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FirstRender.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="SecondRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FirstRender.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="SecondRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Shader.dgsl" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Debug\shader.fx">
+    <None Include="shader.fx">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>

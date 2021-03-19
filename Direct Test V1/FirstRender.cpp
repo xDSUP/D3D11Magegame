@@ -1,7 +1,6 @@
 #include "FirstRender.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
-#include <DirectXMathVector.inl>
 
 using namespace DirectX;
 

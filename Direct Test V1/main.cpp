@@ -5,6 +5,7 @@
 #include "FirstRender.h"
 
 #include "D3D11_Framework.h"
+#include "SecondRender.h"
 
 using namespace D3D11_Framework;
 
@@ -12,7 +13,7 @@ int main()
 {
 	Framework framework;
 
-	Render* render = new FirstRender();
+	Render* render = new SecondRender();
 	InputListener* input = new InputHandler();
 
 	framework.SetRender(render);
