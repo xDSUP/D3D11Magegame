@@ -22,6 +22,9 @@
     <ClCompile Include="SecondRender.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="CubeTransformRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -31,6 +34,9 @@
       <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="SecondRender.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeTransformRender.h">
       <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>

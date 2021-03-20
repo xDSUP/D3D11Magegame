@@ -1,11 +1,13 @@
 ﻿// Direct Test V1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнен//ие программы.
 //
 #pragma once
-#include "InputHandler.h"
-#include "FirstRender.h"
-
 #include "D3D11_Framework.h"
-#include "SecondRender.h"
+#include "InputHandler.h"
+
+
+//#include "FirstRender.h"
+//#include "SecondRender.h"
+#include "CubeTransformRender.h"
 
 using namespace D3D11_Framework;
 
@@ -13,11 +15,15 @@ int main()
 {
 	Framework framework;
 
-	Render* render = new SecondRender();
+	Render* render = new CubeTransformRender();
 	InputListener* input = new InputHandler();
 
-	framework.SetRender(render);
-	framework.Init();
+	FrameworkDesc desc;
+	desc.wnd.width = 640;
+	desc.wnd.height = 480;
+	desc.render = render;
+	
+	framework.Init(desc);
 	framework.AddInputListener(input);
 
 	framework.Run();

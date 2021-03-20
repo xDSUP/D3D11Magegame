@@ -162,12 +162,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CubeTransformRender.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FirstRender.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="SecondRender.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CubeTransformRender.h" />
     <ClInclude Include="FirstRender.h" />
     <ClInclude Include="InputHandler.h" />
     <ClInclude Include="SecondRender.h" />
