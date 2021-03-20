@@ -9,14 +9,16 @@ using namespace DirectX;
 struct SimpleVertex
 {
 	XMFLOAT3 Pos;
-	XMFLOAT4 Color;
+	//XMFLOAT4 Color;
+	XMFLOAT2 Tex;
 };
 
 struct ConstantBuffer
 {
-	XMMATRIX mWorld;
-	XMMATRIX mView;
-	XMMATRIX mProjection;
+	XMMATRIX MVP;
+	//XMMATRIX mWorld;
+	//XMMATRIX mView;
+	//XMMATRIX mProjection;
 };
 
 class CubeTransformRender :
@@ -41,9 +43,15 @@ private:
 	ID3D11Buffer* _pIndexBuffer;
 	ID3D11Buffer* _pConstantBuffer;
 
+	// будет хранить текстуру в памяти
+	ID3D11ShaderResourceView* _pTextureRV;
+	// описывает представление текстуры - фильтрацию, MIP и адрессацию.
+	ID3D11SamplerState* _pSamplerState;
+
+	float _rot;
+
 	XMMATRIX _world1;
 	XMMATRIX _world2;
-	XMMATRIX _world3;
 	XMMATRIX _view;
 	XMMATRIX _projection;
 };

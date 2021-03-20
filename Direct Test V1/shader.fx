@@ -1,32 +1,26 @@
-cbuffer ConstantBuffer
+cbuffer cbPerObject
 {
-    matrix World;
-    matrix View;
-    matrix Projection;
-}
+	float4x4 WVP;
+};
+
+Texture2D ObjTexture;
+SamplerState ObjSamplerState;
 
 struct VS_OUTPUT
 {
-    float4 Pos : SV_POSITION;
-    float4 Color : COLOR0;
+	float4 Pos : SV_POSITION;
+	float2 TexCoord : TEXCOORD;
 };
 
-
-VS_OUTPUT VS(float4 Pos : POSITION, float4 Color : COLOR)
+VS_OUTPUT VS(float4 inPos : POSITION, float2 inTexCoord : TEXCOORD)
 {
-    VS_OUTPUT output = (VS_OUTPUT)0;
-    output.Pos = mul(Pos, World);
-    output.Pos = mul(output.Pos, View);    
-    output.Pos = mul(output.Pos, Projection);
-    output.Color = Color;
-    return output;
+	VS_OUTPUT output;
+	output.Pos = mul(inPos, WVP);
+	output.TexCoord = inTexCoord;
+	return output;
 }
 
-
-//--------------------------------------------------------------------------------------
-// Пикслельный шейдер
-//--------------------------------------------------------------------------------------
-float4 PS(VS_OUTPUT input) : SV_Target
+float4 PS(VS_OUTPUT input) : SV_TARGET
 {
-    return input.Color;
+	return ObjTexture.Sample(ObjSamplerState, input.TexCoord);
 }

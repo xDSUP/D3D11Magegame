@@ -10,6 +10,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{6b6ff054-9cc8-47de-a83c-4a4c1c475366}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Textures">
+      <UniqueIdentifier>{cd3d94a8-47d9-4ed6-86f8-908a88344b6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
@@ -45,10 +48,11 @@
     <None Include="Shader.dgsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shader.fx" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="shader.fx">
-      <Filter>Shaders</Filter>
-    </FxCompile>
+    <Image Include="texture.png">
+      <Filter>Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
