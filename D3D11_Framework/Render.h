@@ -47,6 +47,16 @@ namespace D3D11_Framework
 		virtual void Close() = 0;
 
 	protected:
+		
+		/**
+		 * \brief загружает код шейдера из файла
+		 * \param FileName имя файла
+		 * \param EntryPoint название функции
+		 * \param ShaderModel модель шейдера
+		 * \param ppBlobOut ст-ра, куда грузить
+		 * \return 
+		 */
+		HRESULT _compileShaderFromFile(const wchar_t* FileName, LPCSTR EntryPoint, LPCSTR ShaderModel, ID3DBlob** ppBlobOut);
 		D3D_DRIVER_TYPE _driverType;
 		D3D_FEATURE_LEVEL _featureLevel;
 		/**
@@ -67,6 +77,16 @@ namespace D3D11_Framework
 		 * \brief бъект нашего заднего буфера в котором мы будем рисовать нашу сцену.
 		 */
 		ID3D11RenderTargetView* _renderTargetView;
+
+		/**
+		 * \brief  текстура которая будет представлять наш буфер глубины
+		 */
+		ID3D11Texture2D* _pDepthStencil;
+		
+		/**
+		 * \brief отвечает за буфер глубины
+		 */
+		ID3D11DepthStencilView* _pDepthStencilView;
 	};
 
 	//------------------------------------------------------------------

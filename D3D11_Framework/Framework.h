@@ -5,12 +5,16 @@
 #include "InputManager.h"
 #include "Log.h"
 
-
-
 namespace D3D11_Framework
 {
 	//------------------------------------------------------------------
 
+	struct FrameworkDesc
+	{
+		DescWindow wnd;
+		Render* render;
+	};
+	
 	class Framework
 	{
 	public:
@@ -21,15 +25,17 @@ namespace D3D11_Framework
 		 * \brief инициализация
 		 * \return 
 		 */
-		bool Init();
+		bool Init(const FrameworkDesc& desc);
 		/**
 		 * \brief основной цикл программы
 		 */
 		void Run();
 		void Close();
 
-		void SetRender(Render* render) { _render = render; }
 		void AddInputListener(InputListener* listener);
+
+		// оставлено для поддержки совместимости со старыми версиями)
+		
 	protected:
 		
 		/**
@@ -38,6 +44,7 @@ namespace D3D11_Framework
 		 */
 		bool _frame();
 
+		FrameworkDesc _desc;
 		Window* _wnd;
 		Render* _render;
 		InputManager* _input;

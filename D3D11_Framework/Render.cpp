@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "Render.h"
+
+
+
+#include "Log.h"
 #include "macros.h"
 
 namespace D3D11_Framework
@@ -14,6 +18,8 @@ namespace D3D11_Framework
 		_context = nullptr;
 		_swapChain = nullptr;
 		_renderTargetView = nullptr;
+		_pDepthStencil = nullptr;
+		_pDepthStencilView = nullptr;
 	}
 
 	Render::~Render()
@@ -103,9 +109,40 @@ namespace D3D11_Framework
 		if (FAILED(hr))
 			return false;
 
+		// сначала мы создаем текстуру,
+		D3D11_TEXTURE2D_DESC descDepth;
+		ZeroMemory(&descDepth, sizeof(descDepth));
+		descDepth.Width = width;
+		descDepth.Height = height;
+		descDepth.MipLevels = 1;
+		descDepth.ArraySize = 1;
+		descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		descDepth.SampleDesc.Count = 1;
+		descDepth.SampleDesc.Quality = 0;
+		descDepth.Usage = D3D11_USAGE_DEFAULT;
+		descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		descDepth.CPUAccessFlags = 0;
+		descDepth.MiscFlags = 0;
+		hr = _device->CreateTexture2D(&descDepth, NULL, &_pDepthStencil);
+		if (FAILED(hr))
+			return false;
+
+		//описываем сам буфер в который и передаем эту самую текстуру.
+		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+		ZeroMemory(&descDSV, sizeof(descDSV));
+		descDSV.Format = descDepth.Format;
+		descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		descDSV.Texture2D.MipSlice = 0;
+		hr = _device->CreateDepthStencilView(_pDepthStencil, &descDSV, &_pDepthStencilView);
+		if (FAILED(hr))
+			return false;
+
+		_context->OMSetRenderTargets(1, &_renderTargetView, _pDepthStencilView);
+
 		// Здесь мы указываем цель рендера,
 		// в которую видеокарта будет рисовать полученую картинку.
-		_context->OMSetRenderTargets(1, &_renderTargetView, NULL);
+		// суём сюда буфер глубины
+		_context->OMSetRenderTargets(1, &_renderTargetView, _pDepthStencilView);
 
 		// Вьюпорт определяет зону рисования.
 		// Здесь мы указываем что рисовать надо начиная из точки 0,0 (параметры TopLeftX и TopLeftY)
@@ -127,6 +164,8 @@ namespace D3D11_Framework
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
 		// берем задний буфер и очищаем его заданным цветом.
 		_context->ClearRenderTargetView(_renderTargetView, ClearColor);
+		// очищаем буфер глубины ( заполняет его единицами)
+		_context->ClearDepthStencilView(_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
 	void Render::EndFrame()
@@ -148,6 +187,28 @@ namespace D3D11_Framework
 		_RELEASE(_swapChain);
 		_RELEASE(_context);
 		_RELEASE(_device);
+		_RELEASE(_pDepthStencil);
+		_RELEASE(_pDepthStencilView);
+	}
+
+	HRESULT Render::_compileShaderFromFile(const wchar_t* FileName, LPCSTR EntryPoint, LPCSTR ShaderModel,
+		ID3DBlob** ppBlobOut)
+	{
+		HRESULT hr = S_OK;
+
+		DWORD ShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#if defined( DEBUG ) || defined( _DEBUG )
+		ShaderFlags |= D3DCOMPILE_DEBUG;
+#endif
+
+		ID3DBlob* pErrorBlob;
+		hr = D3DX11CompileFromFile(FileName, NULL, NULL, EntryPoint, ShaderModel, ShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL);
+		if (FAILED(hr) && pErrorBlob != NULL)
+			OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
+
+		_RELEASE(pErrorBlob);
+		return hr;
+		
 	}
 
 	//------------------------------------------------------------------

@@ -22,23 +22,26 @@ namespace D3D11_Framework
 	{
 	}
 
-	bool Framework::Init()
+	bool Framework::Init(const FrameworkDesc &desc)
 	{
+		_render = desc.render;
+		
 		_wnd = new Window();
 		_input = new InputManager();
 		if(!_wnd || !_input)
 		{
-			sLog->Err("Не удалось выдерилть память");
+			sLog->Err("Не удалось выделить память");
 			return false;
 		}
+		
 		_input->Init();
 
-		DescWindow desc;
-		if (!_wnd->Create(desc))
+		if (!_wnd->Create(desc.wnd))
 		{
 			sLog->Err("Не удалось создать окно");
 			return false;
 		}
+		
 		_wnd->SetInputManager(_input);
 
 		if (!_render->CreateDevice(_wnd->GetHWND()))
