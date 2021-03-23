@@ -22,19 +22,20 @@ bool Test2dRender::Init(HWND hwnd)
 bool Test2dRender::Draw()
 {
 	static float rot = 0.0f;
-	rot += 0.0000005f;
+	rot += 0.0005f;
 	if (rot > 6.26f)
 		rot = 0.0f;
-
-	_mesh->Identity();
-	_mesh->Rotate(rot, 0.0, 1.0, 0.0);
-	//_mesh->Translate(-1.5, 0.0, 0.0);
-	_mesh->Draw(_view);
-
-	//_mesh->Identity();
-	//_mesh->Rotate(rot, 0.0, 1.0, 0.0);
-	//_mesh->Translate(1.5, 0.0, 0.0);
-	//_mesh->Draw(_view);
+	
+	for (float i = 0; i < 6.26f; i+= 1.038f)
+	{
+		_mesh->Identity();
+		_mesh->Rotate(1.5, 0.0, 1.0, 0.0);
+		_mesh->Translate(0.0, 0.0, 1.5);
+		_mesh->Rotate(rot+i, 0.0, 1.0, 0.0);
+		_mesh->Draw(_view);
+	}
+	
+	
 	return true;
 }
 
