@@ -62,9 +62,9 @@ bool CubeTransformRender::Init(HWND hwnd)
 	SimpleVertex vertices[] =
 	{
 	{ XMFLOAT3(-1.0f, 1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
-	{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
-	{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
-	{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f) },
+	{ XMFLOAT3(1.0f, 1.0f, -1.0f), XMFLOAT2(0.5f, 0.0f) },
+	{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 0.5f) },
+	{ XMFLOAT3(-1.0f, 1.0f, 1.0f), XMFLOAT2(0.5f, 0.5f) },
 	{ XMFLOAT3(-1.0f, -1.0f, -1.0f), XMFLOAT2(0.0f, 0.0f) },
 	{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT2(1.0f, 0.0f) },
 	{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f) },
@@ -159,8 +159,8 @@ bool CubeTransformRender::Init(HWND hwnd)
 	_world1 = XMMatrixIdentity();
 	_world2 = XMMatrixIdentity();
 
-	XMVECTOR Eye = XMVectorSet(0.0f, 3.0f, -8.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+	XMVECTOR Eye = XMVectorSet(0.0f, -5.0f, -8.0f, 0.0f);
+	XMVECTOR At = XMVectorSet(2.0f, 7.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	_view = XMMatrixLookAtLH(Eye, At, Up);
 

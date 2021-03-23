@@ -13,6 +13,9 @@
     <Filter Include="Textures">
       <UniqueIdentifier>{cd3d94a8-47d9-4ed6-86f8-908a88344b6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{a9a0cd15-16a3-44a6-9a35-065b9f58ba2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
@@ -28,6 +31,10 @@
     <ClCompile Include="CubeTransformRender.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="RenderModel.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -42,6 +49,11 @@
     <ClInclude Include="CubeTransformRender.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="RenderModel.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ms3dspec.h" />
+    <ClInclude Include="StaticMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -49,10 +61,24 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shader.fx" />
+    <None Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\mesh.ms3d">
+      <Filter>Meshes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture.png">
       <Filter>Textures</Filter>
     </Image>
+    <Image Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\GoblinStatueBooty01.png">
+      <Filter>Textures</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MeshPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="MeshVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

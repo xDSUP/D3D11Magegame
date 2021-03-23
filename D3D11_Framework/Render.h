@@ -46,6 +46,9 @@ namespace D3D11_Framework
 		virtual bool Draw() = 0;
 		virtual void Close() = 0;
 
+		void* operator new(size_t i) { return _aligned_malloc(i, 16); }
+		void operator delete(void* p) { _aligned_free(p); }
+	
 	protected:
 		
 		/**

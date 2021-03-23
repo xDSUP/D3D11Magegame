@@ -7,7 +7,8 @@
 
 //#include "FirstRender.h"
 //#include "SecondRender.h"
-#include "CubeTransformRender.h"
+//#include "CubeTransformRender.h"
+#include "RenderModel.h"
 
 using namespace D3D11_Framework;
 
@@ -15,7 +16,7 @@ int main()
 {
 	Framework framework;
 
-	Render* render = new CubeTransformRender();
+	Render* render = new RenderModel();
 	InputListener* input = new InputHandler();
 
 	FrameworkDesc desc;

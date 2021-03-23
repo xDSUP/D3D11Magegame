@@ -1,10 +1,10 @@
-Лог создан: 03/20/21 23:03:41.
+Лог создан: 03/23/21 15:02:52.
 ---------------------------------------
 
-23:03:41::140: *DEBUG: InputManager Init
-23:03:41::142: *DEBUG: Window Create
-23:05:50::129556: *DEBUG: Window Close
-23:05:50::129560: *DEBUG: InputManager Close
+15:02:52::269: *DEBUG: InputManager Init
+15:02:52::271: *DEBUG: Window Create
+15:02:54::2153: *DEBUG: Window Close
+15:02:54::2176: *DEBUG: InputManager Close
 
 ---------------------------------------
-Конец лога: 03/20/21 23:05:50.
+Конец лога: 03/23/21 15:02:54.

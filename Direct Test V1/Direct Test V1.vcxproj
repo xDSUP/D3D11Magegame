@@ -166,15 +166,21 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="FirstRender.cpp" />
     <ClCompile Include="InputHandler.cpp" />
+    <ClCompile Include="RenderModel.cpp" />
     <ClCompile Include="SecondRender.cpp" />
+    <ClCompile Include="StaticMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeTransformRender.h" />
     <ClInclude Include="FirstRender.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="ms3dspec.h" />
+    <ClInclude Include="RenderModel.h" />
     <ClInclude Include="SecondRender.h" />
+    <ClInclude Include="StaticMesh.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\mesh.ms3d" />
     <None Include="packages.config" />
     <None Include="Shader.dgsl" />
   </ItemGroup>
@@ -184,7 +190,22 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\GoblinStatueBooty01.png" />
     <Image Include="texture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="MeshPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="MeshVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
