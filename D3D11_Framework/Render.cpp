@@ -1,10 +1,9 @@
 #include "stdafx.h"
-#include "Render.h"
-
-
-
 #include "Log.h"
 #include "macros.h"
+
+#include "Render.h"
+#include "StaticMesh.h"
 
 namespace D3D11_Framework
 {
@@ -20,6 +19,8 @@ namespace D3D11_Framework
 		_renderTargetView = nullptr;
 		_pDepthStencil = nullptr;
 		_pDepthStencilView = nullptr;
+		_pDepthStencilState = nullptr;
+		_pDepthDisabledStencilState = nullptr;
 	}
 
 	Render::~Render()
@@ -126,6 +127,31 @@ namespace D3D11_Framework
 		hr = _device->CreateTexture2D(&descDepth, NULL, &_pDepthStencil);
 		if (FAILED(hr))
 			return false;
+		// трафарет глубины
+		D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+		ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+		depthStencilDesc.DepthEnable = true;
+		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+		depthStencilDesc.StencilEnable = true;
+		depthStencilDesc.StencilReadMask = 0xFF;
+		depthStencilDesc.StencilWriteMask = 0xFF;
+		depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+		depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+		depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+		hr = _device->CreateDepthStencilState(&depthStencilDesc, &_pDepthStencilState);
+		if (FAILED(hr))
+			return false;
+
+		depthStencilDesc.DepthEnable = false;
+		hr = _device->CreateDepthStencilState(&depthStencilDesc, &_pDepthDisabledStencilState);
+		if (FAILED(hr))
+			return false;
 
 		//описываем сам буфер в который и передаем эту самую текстуру.
 		D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
@@ -154,12 +180,16 @@ namespace D3D11_Framework
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
 		_context->RSSetViewports(1, &vp);
+		
+		_projection = XMMatrixPerspectiveFovLH(0.4f * 3.14f,
+			(float)width / height, 1.0f, 1000.0f);
 
 		return Init(hwnd);
 	}
 
 	void Render::BeginFrame()
 	{
+		TurnZBufferOn();
 		// красный, зеленый, синий, альфа
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
 		// берем задний буфер и очищаем его заданным цветом.
@@ -189,10 +219,22 @@ namespace D3D11_Framework
 		_RELEASE(_device);
 		_RELEASE(_pDepthStencil);
 		_RELEASE(_pDepthStencilView);
+		_RELEASE(_pDepthStencilState);
+		_RELEASE(_pDepthDisabledStencilState);
+	}
+
+	void Render::TurnZBufferOn()
+	{
+		_context->OMSetDepthStencilState(_pDepthStencilState, 1);
+	}
+
+	void Render::TurnZBufferOff()
+	{
+		_context->OMSetDepthStencilState(_pDepthDisabledStencilState, 1);
 	}
 
 	HRESULT Render::_compileShaderFromFile(const wchar_t* FileName, LPCSTR EntryPoint, LPCSTR ShaderModel,
-		ID3DBlob** ppBlobOut)
+	                                       ID3DBlob** ppBlobOut)
 	{
 		HRESULT hr = S_OK;
 

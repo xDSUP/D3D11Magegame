@@ -168,7 +168,7 @@
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="RenderModel.cpp" />
     <ClCompile Include="SecondRender.cpp" />
-    <ClCompile Include="StaticMesh.cpp" />
+    <ClCompile Include="Test2dRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CubeTransformRender.h" />
@@ -177,7 +177,7 @@
     <ClInclude Include="ms3dspec.h" />
     <ClInclude Include="RenderModel.h" />
     <ClInclude Include="SecondRender.h" />
-    <ClInclude Include="StaticMesh.h" />
+    <ClInclude Include="Test2dRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\mesh.ms3d" />

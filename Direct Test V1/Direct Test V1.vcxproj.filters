@@ -16,44 +16,47 @@
     <Filter Include="Meshes">
       <UniqueIdentifier>{a9a0cd15-16a3-44a6-9a35-065b9f58ba2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\old">
+      <UniqueIdentifier>{7c64644d-fde5-40aa-bd8f-9bb99cac0c1f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
       <Filter>Input</Filter>
     </ClCompile>
-    <ClCompile Include="FirstRender.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SecondRender.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="CubeTransformRender.cpp">
-      <Filter>Render</Filter>
+      <Filter>Render\old</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstRender.cpp">
+      <Filter>Render\old</Filter>
     </ClCompile>
     <ClCompile Include="RenderModel.cpp">
-      <Filter>Render</Filter>
+      <Filter>Render\old</Filter>
     </ClCompile>
-    <ClCompile Include="StaticMesh.cpp" />
+    <ClCompile Include="SecondRender.cpp">
+      <Filter>Render\old</Filter>
+    </ClCompile>
+    <ClCompile Include="Test2dRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="FirstRender.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="SecondRender.h">
-      <Filter>Render</Filter>
-    </ClInclude>
+    <ClInclude Include="ms3dspec.h" />
     <ClInclude Include="CubeTransformRender.h">
-      <Filter>Render</Filter>
+      <Filter>Render\old</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstRender.h">
+      <Filter>Render\old</Filter>
     </ClInclude>
     <ClInclude Include="RenderModel.h">
-      <Filter>Render</Filter>
+      <Filter>Render\old</Filter>
     </ClInclude>
-    <ClInclude Include="ms3dspec.h" />
-    <ClInclude Include="StaticMesh.h" />
+    <ClInclude Include="SecondRender.h">
+      <Filter>Render\old</Filter>
+    </ClInclude>
+    <ClInclude Include="Test2dRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

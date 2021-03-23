@@ -4,11 +4,7 @@
 #include "D3D11_Framework.h"
 #include "InputHandler.h"
 
-
-//#include "FirstRender.h"
-//#include "SecondRender.h"
-//#include "CubeTransformRender.h"
-#include "RenderModel.h"
+#include "Test2dRender.h"
 
 using namespace D3D11_Framework;
 
@@ -16,7 +12,7 @@ int main()
 {
 	Framework framework;
 
-	Render* render = new RenderModel();
+	Render* render = new Test2dRender();
 	InputListener* input = new InputHandler();
 
 	FrameworkDesc desc;

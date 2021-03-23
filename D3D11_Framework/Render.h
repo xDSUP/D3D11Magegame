@@ -17,11 +17,12 @@ namespace D3D11_Framework
 	
 	class Render
 	{
+		// убрать это потом
+		friend class StaticMesh; 
 	public:
 		Render();
 		virtual ~Render();
 
-		
 		/**
 		 * \brief Инициализация DirectX
 		 * \param hwnd 
@@ -45,6 +46,15 @@ namespace D3D11_Framework
 		virtual bool Init(HWND hwnd) = 0;
 		virtual bool Draw() = 0;
 		virtual void Close() = 0;
+
+		/// <summary>
+		/// Включает буфер глубины
+		/// </summary>
+		void TurnZBufferOn();
+		/// <summary>
+		/// отключает буфер глубины
+		/// </summary>
+		void TurnZBufferOff();
 
 		void* operator new(size_t i) { return _aligned_malloc(i, 16); }
 		void operator delete(void* p) { _aligned_free(p); }
@@ -70,7 +80,6 @@ namespace D3D11_Framework
 		 * \brief  отвечает за смену буферов
 		 */
 		IDXGISwapChain* _swapChain;
-
 		/**
 		 * immediate (непосредственный)
 		 * \brief используется приложением для выполнения рендеринга в буфер
@@ -80,16 +89,21 @@ namespace D3D11_Framework
 		 * \brief бъект нашего заднего буфера в котором мы будем рисовать нашу сцену.
 		 */
 		ID3D11RenderTargetView* _renderTargetView;
-
 		/**
 		 * \brief  текстура которая будет представлять наш буфер глубины
 		 */
 		ID3D11Texture2D* _pDepthStencil;
-		
 		/**
 		 * \brief отвечает за буфер глубины
 		 */
 		ID3D11DepthStencilView* _pDepthStencilView;
+
+		// два состояния для вкл\выкл глубины
+		ID3D11DepthStencilState* _pDepthStencilState;
+		ID3D11DepthStencilState* _pDepthDisabledStencilState;
+		
+		// матрица проекции
+		XMMATRIX _projection;
 	};
 
 	//------------------------------------------------------------------

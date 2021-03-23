@@ -27,6 +27,18 @@
     <ClInclude Include="macros.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ms3dspec.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -45,6 +57,12 @@
     <ClCompile Include="Framework.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -61,6 +79,9 @@
     </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{55370297-1525-4813-b318-3d609cd39712}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{3cac3f3d-d3ad-43d1-93db-d73b30c47a12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

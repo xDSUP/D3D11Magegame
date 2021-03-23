@@ -1,10 +1,13 @@
-
+#include "stdafx.h"
 #include "StaticMesh.h"
 
+#include "D3D11_Framework.h"
+#include "Util.h"
 
-#define w(c) ctoString(c)
+
 
 using namespace std;
+using namespace D3D11_Framework;
 
 struct Vertex
 {
@@ -14,57 +17,30 @@ struct Vertex
 
 struct ConstantBuffer { XMMATRIX WVP; };
 
-wchar_t* toString(char* mbStr)
-{
-	int len = (int)strlen(mbStr) + 1;
-	wchar_t* ucStr = new wchar_t[len];
-	size_t outSize;
-	mbstowcs_s(&outSize, ucStr, len, mbStr, len-1);
-	return ucStr;
-}
-
-wchar_t* ctoString(const char* mbStr)
-{
-	int len = (int)strlen(mbStr) + 1;
-	wchar_t* ucStr = new wchar_t[len];
-	size_t outSize;
-	mbstowcs_s(&outSize, ucStr, len, mbStr, len - 1);
-	return ucStr;
-}
 
 StaticMesh::StaticMesh()
 {
-	_render = nullptr;
 	_vertexBuffer = nullptr;
-	_indexBuffer = nullptr;
 	_vertexShader = nullptr;
 	_pixelShader = nullptr;
-	_layout = nullptr;
+	_indexBuffer = nullptr;
 	_pConstantBuffer = nullptr;
+	_layout = nullptr;
 	_sampleState = nullptr;
 	_texture = nullptr;
-	_rot = 0.0f;
+	Identity();
 }
 
-bool StaticMesh::Init(RenderModel* render,const wchar_t* name)
+bool StaticMesh::Init(D3D11_Framework::Render* render, const wchar_t* name)
 {
-	this->objM = XMMatrixIdentity();
-	this->_render = render;
+	_objMatrix = XMMatrixIdentity();
+		_render = render;
 	if (!_loadMS3DFile(name)) return false;
-	if(!_initShader(w("MeshVS.hlsl"), w("MeshPS.hlsl"))) return false;
+	if (!_initShader(w("MeshVS.hlsl"), w("MeshPS.hlsl"))) return false;
 	return true;
 }
 
-void StaticMesh::Render()
-{
-	_rot += .0005f;
-	if (_rot > 6.26f)
-		_rot = 0.0f;
 
-	_renderBuffers();
-	_setShaderParameters();
-	_renderShader();
-}
 
 bool StaticMesh::_loadMS3DFile(const wchar_t* name)
 {
@@ -162,7 +138,7 @@ bool StaticMesh::_loadMS3DFile(const wchar_t* name)
 
 
 	// одна текстура тк один материал
-	if (!_loadTextures(toString(pMS3DMaterials[0].texture)))
+	if (!_loadTextures(CharToWChar(pMS3DMaterials[0].texture)))
 		return false;
 
 	_DELETE_ARRAY(pMS3DMaterials);
@@ -223,6 +199,7 @@ bool StaticMesh::_loadTextures(const wchar_t* name)
 	return true;
 }
 
+
 bool StaticMesh::_initShader(wchar_t* vsFilename, wchar_t* psFilename)
 {
 	ID3DBlob* vertexShaderBuffer = nullptr;
@@ -251,6 +228,7 @@ bool StaticMesh::_initShader(wchar_t* vsFilename, wchar_t* psFilename)
 	polygonLayout[0].AlignedByteOffset = 0;
 	polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[0].InstanceDataStepRate = 0;
+	
 	polygonLayout[1].SemanticName = "TEXCOORD";
 	polygonLayout[1].SemanticIndex = 0;
 	polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
@@ -291,6 +269,14 @@ bool StaticMesh::_initShader(wchar_t* vsFilename, wchar_t* psFilename)
 	return true;
 }
 
+void StaticMesh::Draw(CXMMATRIX viewMatrix)
+{
+	_renderBuffers();
+	_setShaderParameters(viewMatrix);
+	_renderShader();
+}
+
+
 void StaticMesh::_renderBuffers() const
 {
 	unsigned int stride = sizeof(Vertex);
@@ -301,13 +287,9 @@ void StaticMesh::_renderBuffers() const
 	
 }
 
-void StaticMesh::_setShaderParameters()
+void StaticMesh::_setShaderParameters(CXMMATRIX viewMatrix)
 {
-	XMVECTOR rotaxis = XMVectorSet(0, 1, 0, 0);
-	XMMATRIX rotation = XMMatrixRotationAxis(rotaxis, _rot);
-	objM = rotation;
-
-	XMMATRIX WVP = objM * _render->_view * _render->_projection;
+	XMMATRIX WVP = _objMatrix * viewMatrix * _render->_projection;
 	ConstantBuffer cb;
 	cb.WVP = XMMatrixTranspose(WVP);
 	_render->_context->UpdateSubresource(_pConstantBuffer, 0, NULL, 
@@ -337,5 +319,25 @@ void StaticMesh::Close()
 	_RELEASE(_vertexShader);
 }
 
+void StaticMesh::Translate(float x, float y, float z)
+{
+	_objMatrix *= XMMatrixTranslation(x, y, z);
+}
+
+void StaticMesh::Rotate(float angle, float x, float y, float z)
+{
+	XMVECTOR v = XMVectorSet(x, y, z, 0.0f);
+	_objMatrix *= XMMatrixRotationAxis(v, angle);
+}
+
+void StaticMesh::Scale(float x, float y, float z)
+{
+	_objMatrix *= XMMatrixScaling(x, y, z);
+}
+
+void StaticMesh::Identity()
+{
+	_objMatrix = XMMatrixIdentity();
+}
 
 
