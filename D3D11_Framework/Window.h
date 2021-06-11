@@ -1,17 +1,15 @@
 #pragma once
+#include <string>
 
-#include "InputManager.h"
-
-namespace D3D11_Framework
+namespace D3D11Framework
 {
-	class InputManager;
-	//------------------------------------------------------------------
-
-	//class InputManager;
+//------------------------------------------------------------------
+	
+	class InputMgr;
 
 	struct DescWindow
 	{
-		DescWindow() :
+		DescWindow() : 
 			caption(L""),
 			width(640),
 			height(480),
@@ -33,10 +31,10 @@ namespace D3D11_Framework
 	public:
 		Window();
 
-		static Window* Get() { return _wndthis; }
+		static Window* Get(){return m_wndthis;}
 
 		// Создать окно
-		bool Create(const DescWindow& desc);
+		bool Create(const DescWindow &desc);
 
 		// Обработка событий окна
 		void RunEvent();
@@ -44,50 +42,48 @@ namespace D3D11_Framework
 		// Закрыть окно.
 		void Close();
 
-		void SetInputManager(InputManager* inputmgr);
-
-		HWND GetHWND() const { return _hwnd; }
-		int GetLeft() const { return _desc.posx; }
-		int GetTop() const { return _desc.posy; }
-		int GetWidth() const { return _desc.width; }
-		int GetHeight() const { return _desc.height; }
+		void SetInputMgr(InputMgr *inputmgr);
+		
+		HWND GetHWND() const {return m_hwnd;}
+		int GetLeft() const {return m_desc.posx;}
+		int GetTop() const {return m_desc.posy;}
+		int GetWidth() const {return m_desc.width;}
+		int GetHeight() const {return m_desc.height;}
 		// Вернуть заголовок окна
-		const std::wstring& GetCaption() const { return _desc.caption; }
+		const std::wstring& GetCaption() const {return m_desc.caption;}
 
 		// сообщает, было ли сообщение о выходе
-		bool IsExit() const { return _isExit; }
+		bool IsExit() const {return m_isexit;}
 		// сообщает об активности окна
-		bool IsActive() const { return _active; }
+		bool IsActive() const {return m_active;}
 		// сообщает об изменении окна
 		// предупреждение: после вызова оповещает окно об обработке события
-		bool IsResize()
+		bool IsResize() 
 		{
-			bool ret = _isResize;
-			_isResize = false;
+			bool ret = m_isresize;
+			m_isresize = false;
 			return ret;
 		}
 
 		// обработка событий
 		LRESULT WndProc(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
 	private:
-		void _UpdateWindowState();
+		void m_UpdateWindowState();
 
-		static Window* _wndthis;
+		static Window *m_wndthis;
 
-		DescWindow _desc;	// описание окна
-		InputManager* _inputManager;
-		HWND _hwnd;		// дескриптор окна	
-		bool _isExit;		// флаг сообщающий о событии выхода	
-		bool _active;		// окно активно?
-		bool _minimized;
-		bool _maximized;
-		bool _isResize;	// если окно изменило размер
+		DescWindow m_desc;	// описание окна
+		InputMgr *m_inputmgr;
+		HWND m_hwnd;		// дескриптор окна	
+		bool m_isexit;		// флаг сообщающий о событии выхода	
+		bool m_active;		// окно активно?
+		bool m_minimized;
+		bool m_maximized;
+		bool m_isresize;	// если окно изменило размер
 	};
 
 	// обработка событий
 	static LRESULT CALLBACK StaticWndProc(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam);
 
-	//------------------------------------------------------------------
+//------------------------------------------------------------------
 }
-
-

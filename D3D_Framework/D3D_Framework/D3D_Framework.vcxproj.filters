@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="macros.h">
+      <Filter>Common System</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>Util System</Filter>
+    </ClInclude>
+    <ClInclude Include="InputCodes.h">
+      <Filter>Input System</Filter>
+    </ClInclude>
+    <ClInclude Include="InputListener.h">
+      <Filter>Input System</Filter>
+    </ClInclude>
+    <ClInclude Include="InputMgr.h">
+      <Filter>Input System</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Render.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Framework.h">
+      <Filter>Framework System</Filter>
+    </ClInclude>
+    <ClInclude Include="D3D11_Framework.h" />
+    <ClInclude Include="Util.h">
+      <Filter>Util System</Filter>
+    </ClInclude>
+    <ClInclude Include="ms3dspec.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapFont.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderState.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Util System</Filter>
+    </ClInclude>
+    <ClInclude Include="Frustum.h">
+      <Filter>Render System</Filter>
+    </ClInclude>
+    <ClInclude Include="Fps.h">
+      <Filter>Util System</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Log.cpp">
+      <Filter>Util System</Filter>
+    </ClCompile>
+    <ClCompile Include="InputMgr.cpp">
+      <Filter>Input System</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Render.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Framework.cpp">
+      <Filter>Framework System</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapFont.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Util System</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>Render System</Filter>
+    </ClCompile>
+    <ClCompile Include="Fps.cpp">
+      <Filter>Util System</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Common System">
+      <UniqueIdentifier>{84351ffa-bc17-492f-bc0f-49c8e23f4abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input System">
+      <UniqueIdentifier>{1dd72510-3d1e-4d6f-85f2-f4f087d4ae82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render System">
+      <UniqueIdentifier>{f0340b90-a763-4485-8120-bfbee64f30c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util System">
+      <UniqueIdentifier>{a54a81c2-67f3-43fe-b6b6-abf9b8a2deee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework System">
+      <UniqueIdentifier>{64a954d2-11b2-4551-b50b-44ea7f49d021}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

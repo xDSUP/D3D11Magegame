@@ -1,23 +1,18 @@
 #pragma once
-#include "stdafx.h"
+
 #include "Render.h"
-#include <fstream>
-#include "ms3dspec.h"
-namespace D3D11_Framework
+
+namespace D3D11Framework
 {
-	/// <summary>
-	/// Класс статичного меша
-	/// </summary>
+	//------------------------------------------------------------------
+
 	class StaticMesh
 	{
 	public:
-		StaticMesh();
+		StaticMesh(Render *render);
 
-		bool Init(Render* render, const wchar_t* name);
-		/// <summary>
-		/// отрисовка
-		/// </summary>
-		void Draw(CXMMATRIX viewMatrix);
+		bool Init(wchar_t *name);
+		void Draw(CXMMATRIX viewmatrix);
 		void Close();
 
 		void Translate(float x, float y, float z);
@@ -25,32 +20,34 @@ namespace D3D11_Framework
 		void Scale(float x, float y, float z);
 		void Identity();
 
-		void* operator new(size_t i) { return _aligned_malloc(i, 16); }
-		void operator delete(void* p) {_aligned_free(p); }
-		
+
+		void* operator new(size_t i)
+		{
+			return _aligned_malloc(i,16);
+		}
+
+		void operator delete(void* p)
+		{
+			_aligned_free(p);
+		}
+
 	private:
-		bool _loadMS3DFile(const wchar_t* name);
-		bool _loadTextures(const wchar_t* name);
-		bool _initShader(wchar_t* vsFilename, wchar_t* psFilename);
+		bool m_loadMS3DFile(wchar_t* name);
 
-		void _renderBuffers() const;
-		void _setShaderParameters(CXMMATRIX viewMatrix);
-		void _renderShader();
+		void m_RenderBuffers();
+		void m_SetShaderParameters(CXMMATRIX viewmatrix);
+		void m_RenderShader();
 
-		D3D11_Framework::Render* _render;
+		Render *m_render;
 
-		ID3D11Buffer* _vertexBuffer;
-		ID3D11Buffer* _indexBuffer;
-		ID3D11VertexShader* _vertexShader;
-		ID3D11PixelShader* _pixelShader;
-		ID3D11InputLayout* _layout;
-		ID3D11Buffer* _pConstantBuffer;
-		ID3D11SamplerState* _sampleState;
-		ID3D11ShaderResourceView* _texture;
+		ID3D11Buffer *m_vertexBuffer;
+		ID3D11Buffer *m_indexBuffer;
+		ID3D11Buffer *m_constantBuffer;
+		Shader *m_shader;
 
-		XMMATRIX _objMatrix;
-		unsigned short _indexCount;
-		//float _rot;
+		XMMATRIX m_objMatrix;
+		unsigned short m_indexCount;
 	};
 
+	//------------------------------------------------------------------
 }

@@ -4,16 +4,15 @@
 #include "D3D11_Framework.h"
 #include "InputHandler.h"
 
-#include "Test2dRender.h"
-
-using namespace D3D11_Framework;
+using namespace std;
+using namespace D3D11Framework;
 
 int main()
 {
 	Framework framework;
 
-	Render* render = new Test2dRender();
-	InputListener* input = new InputHandler();
+	MyRender* render = new MyRender();
+	InputListener* input = new InputHandler(render);
 
 	FrameworkDesc desc;
 	desc.wnd.width = 640;

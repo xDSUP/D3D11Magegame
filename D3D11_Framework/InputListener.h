@@ -1,22 +1,23 @@
 #pragma once
-#include "InputCodes.h"
 
-namespace D3D11_Framework
+namespace D3D11Framework
 {
+//------------------------------------------------------------------
+
 	// события мыши
 	struct MouseEvent
 	{
-		MouseEvent(int nx, int ny) : x(nx), y(ny) {}
+		MouseEvent(int nx, int ny) :  x(nx), y(ny) {}
 
 		// координаты мыши
-		int x;
+		int x;				
 		int y;
 	};
 
 	// событие нажатия кнопки мыши
 	struct MouseEventClick : public MouseEvent
 	{
-		MouseEventClick(eMouseKeyCodes b, int nx, int ny) : MouseEvent(nx, ny), btn(b) {}
+		MouseEventClick(eMouseKeyCodes b, int nx, int ny) : MouseEvent(nx,ny), btn(b) {}
 
 		const eMouseKeyCodes btn;	// Клавиша
 	};
@@ -24,7 +25,7 @@ namespace D3D11_Framework
 	// событие прокрутки мыши
 	struct MouseEventWheel : public MouseEvent
 	{
-		MouseEventWheel(int nwheel, int nx, int ny) : MouseEvent(nx, ny), wheel(nwheel) {}
+		MouseEventWheel(int nwheel, int nx, int ny) : MouseEvent(nx,ny), wheel(nwheel) {}
 
 		int wheel;
 	};
@@ -44,18 +45,19 @@ namespace D3D11_Framework
 		// если методы возращают true - событие больше никем не обрабатывается
 
 		// кнопка нажата
-		virtual bool MousePressed(const MouseEventClick& arg) { return false; }
+		virtual bool MousePressed(const MouseEventClick &arg) { return false; }
 		// кнопка отпущена
-		virtual bool MouseReleased(const MouseEventClick& arg) { return false; }
+		virtual bool MouseReleased(const MouseEventClick &arg) { return false; }
 		// вращение колесика
-		virtual bool MouseWheel(const MouseEventWheel& arg) { return false; }
+		virtual bool MouseWheel(const MouseEventWheel &arg) { return false; }
 		// движение мыши
-		virtual bool MouseMove(const MouseEvent& arg) { return false; }
+		virtual bool MouseMove(const MouseEvent &arg) {return false; }
 
 		// кнопка нажата
-		virtual bool KeyPressed(const KeyEvent& arg) { return false; }
+		virtual bool KeyPressed(const KeyEvent &arg) { return false; }
 		// кнопка отпущена
-		virtual bool KeyReleased(const KeyEvent& arg) { return false; }
+		virtual bool KeyReleased(const KeyEvent &arg) { return false; }
 	};
-}
 
+//------------------------------------------------------------------
+}

@@ -1,31 +1,33 @@
 #include "stdafx.h"
 #include "Window.h"
-#include "InputManager.h"
+#include "InputMgr.h"
 #include "Log.h"
 
-namespace D3D11_Framework
+namespace D3D11Framework
 {
-	Window* Window::_wndthis = nullptr;
+//------------------------------------------------------------------
 	
+	Window *Window::m_wndthis = nullptr;
+
 	Window::Window(void) :
-		_inputManager(nullptr),
-		_hwnd(0),
-		_isExit(false),
-		_active(true),
-		_minimized(false),
-		_maximized(false),
-		_isResize(false)
+		m_inputmgr(nullptr),
+		m_hwnd(0),
+		m_isexit(false),
+		m_active(true),
+		m_minimized(false),
+		m_maximized(false),
+		m_isresize(false)
 	{
-		if (!_wndthis)
-			_wndthis = this;
+		if (!m_wndthis)
+			m_wndthis = this;
 		else
-			sLog->Err("Window уже был создан");
+			Log::Get()->Err("Window уже был создан");
 	}
 
-	bool Window::Create(const DescWindow& desc)
+	bool Window::Create(const DescWindow &desc)
 	{
-		sLog->Debug("Window Create");
-		_desc = desc;
+		Log::Get()->Debug("Window Create");
+		m_desc = desc;
 
 		WNDCLASSEXW wnd;
 
@@ -43,47 +45,40 @@ namespace D3D11_Framework
 		wnd.lpszClassName = L"D3D11F";
 		wnd.cbSize = sizeof(WNDCLASSEX);
 
-		if (!RegisterClassEx(&wnd))
+		if( !RegisterClassEx( &wnd ) )
 		{
-			sLog->Err("Ќе удалось зарегистрировать окно");
+			Log::Get()->Err("Ќе удалось зарегистрировать окно");
 			return false;
 		}
 
-		RECT rect = { 0, 0, _desc.width, _desc.height };
+		RECT rect = {0, 0, m_desc.width, m_desc.height};
 		AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW | WS_VISIBLE, FALSE);
 
 		long lwidth = rect.right - rect.left;
 		long lheight = rect.bottom - rect.top;
 
-		long lleft = (long)_desc.posx;
-		long ltop = (long)_desc.posy;
+		long lleft = (long)m_desc.posx;	
+		long ltop = (long)m_desc.posy;
 
-		_hwnd = CreateWindowEx(
-			NULL, 
-			L"D3D11F", 
-			_desc.caption.c_str(), 
-			WS_OVERLAPPEDWINDOW | WS_VISIBLE, 
-			lleft, ltop, 
-			lwidth, lheight, 
-			NULL, NULL, 
-			NULL, NULL);
+		m_hwnd = CreateWindowEx(NULL, L"D3D11F", m_desc.caption.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,  lleft, ltop, lwidth, lheight, NULL, NULL, NULL, NULL);
 
-		if (!_hwnd)
+		if( !m_hwnd )
 		{
-			sLog->Err("Ќе удалось создать окно");
+			Log::Get()->Err("Ќе удалось создать окно");
 			return false;
 		}
 
-		ShowWindow(_hwnd, SW_SHOW);
-		UpdateWindow(_hwnd);
+		ShowWindow(m_hwnd, SW_SHOW);
+		UpdateWindow(m_hwnd);
 
 		return true;
 	}
 
 	void Window::RunEvent()
 	{
-		MSG msg;
-		while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE ))
+		MSG msg;			// событи€ окна	
+		// просматриваем все поступившие событи€
+		while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -92,93 +87,96 @@ namespace D3D11_Framework
 
 	void Window::Close()
 	{
-		if (_hwnd)
-			DestroyWindow(_hwnd);
-		_hwnd = nullptr;
-		sLog->Debug("Window Close");
-	}
+		if (m_hwnd)
+			DestroyWindow(m_hwnd);
+		m_hwnd = nullptr;
 
-	void Window::SetInputManager(InputManager* inputmgr)
-	{
-		_inputManager = inputmgr;
-		_UpdateWindowState();
+		Log::Get()->Debug("Window Close");
 	}
 
 	LRESULT Window::WndProc(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
 	{
-		switch (nMsg)
+		switch(nMsg)
 		{
 		case WM_CREATE:
 			return 0;
 		case WM_CLOSE:
-			_isExit = true;
+			m_isexit = true;
 			return 0;
 		case WM_ACTIVATE:
 			if (LOWORD(wParam) != WA_INACTIVE)
-				_active = true;
+				m_active = true;
 			else
-				_active = false;
+				m_active = false;
 			return 0;
 		case WM_MOVE:
-			_desc.posx = LOWORD(lParam);
-			_desc.posy = HIWORD(lParam);
-			_UpdateWindowState();
+			m_desc.posx = LOWORD(lParam);
+			m_desc.posy = HIWORD(lParam);
+			m_UpdateWindowState();
 			return 0;
 		case WM_SIZE:
-			if (!_desc.resizing)
+			if (!m_desc.resizing)
 				return 0;
-			_desc.width = LOWORD(lParam);
-			_desc.height = HIWORD(lParam);
-			_isResize = true;
-			if (wParam == SIZE_MINIMIZED)
+			m_desc.width = LOWORD(lParam);
+			m_desc.height = HIWORD(lParam);
+			m_isresize = true;
+			if( wParam == SIZE_MINIMIZED )
 			{
-				_active = false;
-				_minimized = true;
-				_maximized = false;
+				m_active = false;
+				m_minimized = true;
+				m_maximized = false;
 			}
-			else if (wParam == SIZE_MAXIMIZED)
+			else if( wParam == SIZE_MAXIMIZED )
 			{
-				_active = true;
-				_minimized = false;
-				_maximized = true;
+				m_active = true;
+				m_minimized = false;
+				m_maximized = true;
 			}
-			else if (wParam == SIZE_RESTORED)
+			else if( wParam == SIZE_RESTORED )
 			{
-				if (_minimized)
+				if( m_minimized )
 				{
-					_active = true;
-					_minimized = false;
+					m_active = true;
+					m_minimized = false;
 				}
-				else if (_maximized)
+				else if( m_maximized )
 				{
-					_active = true;
-					_maximized = false;
+					m_active = true;
+					m_maximized = false;
 				}
 			}
-			_UpdateWindowState();
+			m_UpdateWindowState();
 			return 0;
 		case WM_MOUSEMOVE: case WM_LBUTTONUP: case WM_LBUTTONDOWN: case WM_MBUTTONUP: case WM_MBUTTONDOWN: case WM_RBUTTONUP: case WM_RBUTTONDOWN: case WM_MOUSEWHEEL: case WM_KEYDOWN: case WM_KEYUP:
-			if (_inputManager)
-				_inputManager->Run(nMsg, wParam, lParam);
+			if (m_inputmgr)
+				m_inputmgr->Run(nMsg,wParam, lParam);
 			return 0;
 		}
 
-		return DefWindowProcW(hwnd, nMsg, wParam, lParam);
+		return DefWindowProcW( hwnd, nMsg, wParam, lParam);
 	}
 
-	void Window::_UpdateWindowState()
+	void Window::SetInputMgr(InputMgr *inputmgr) 
 	{
-		RECT clientRect;
-		clientRect.left = _desc.posx;
-		clientRect.right = _desc.width;
-		clientRect.top = _desc.posy;
-		clientRect.bottom = _desc.height;
-		if (_inputManager)
-			_inputManager->SetWinRect(clientRect);
+		m_inputmgr = inputmgr;
+		m_UpdateWindowState();	
 	}
 
-	LRESULT __stdcall StaticWndProc(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+	void Window::m_UpdateWindowState()
 	{
-		return Window::Get()->WndProc(hwnd, nMsg, wParam, lParam);
+		RECT ClientRect;
+		ClientRect.left = m_desc.posx;
+		ClientRect.top = m_desc.posy;
+		ClientRect.right = m_desc.width;
+		ClientRect.bottom = m_desc.height;
+		if (m_inputmgr)
+			m_inputmgr->SetWinRect(ClientRect);
 	}
+
+	LRESULT CALLBACK D3D11Framework::StaticWndProc(HWND hwnd, UINT nMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return Window::Get()->WndProc( hwnd, nMsg, wParam, lParam );
+	}
+
+//------------------------------------------------------------------
 }

@@ -4,9 +4,6 @@
     <Filter Include="Input">
       <UniqueIdentifier>{aa63aeec-48ea-4f74-9e63-0e312ed1312a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render">
-      <UniqueIdentifier>{a7ad7aee-4b0c-4a0d-81ee-b2128aab28d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{6b6ff054-9cc8-47de-a83c-4a4c1c475366}</UniqueIdentifier>
     </Filter>
@@ -16,63 +13,55 @@
     <Filter Include="Meshes">
       <UniqueIdentifier>{a9a0cd15-16a3-44a6-9a35-065b9f58ba2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\old">
-      <UniqueIdentifier>{7c64644d-fde5-40aa-bd8f-9bb99cac0c1f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
       <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="CubeTransformRender.cpp">
-      <Filter>Render\old</Filter>
-    </ClCompile>
-    <ClCompile Include="FirstRender.cpp">
-      <Filter>Render\old</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderModel.cpp">
-      <Filter>Render\old</Filter>
-    </ClCompile>
-    <ClCompile Include="SecondRender.cpp">
-      <Filter>Render\old</Filter>
-    </ClCompile>
-    <ClCompile Include="Test2dRender.cpp" />
+    <ClCompile Include="ModelList.cpp" />
+    <ClCompile Include="MyRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
       <Filter>Input</Filter>
     </ClInclude>
     <ClInclude Include="ms3dspec.h" />
-    <ClInclude Include="CubeTransformRender.h">
-      <Filter>Render\old</Filter>
-    </ClInclude>
-    <ClInclude Include="FirstRender.h">
-      <Filter>Render\old</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderModel.h">
-      <Filter>Render\old</Filter>
-    </ClInclude>
-    <ClInclude Include="SecondRender.h">
-      <Filter>Render\old</Filter>
-    </ClInclude>
-    <ClInclude Include="Test2dRender.h" />
+    <ClInclude Include="ModelList.h" />
+    <ClInclude Include="MyRender.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Shader.dgsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shader.fx" />
     <None Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\mesh.ms3d">
       <Filter>Meshes</Filter>
+    </None>
+    <None Include="sphere.ms3d">
+      <Filter>Meshes</Filter>
+    </None>
+    <None Include="font.fnt">
+      <Filter>Textures</Filter>
+    </None>
+    <None Include="shader.fx">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture.png">
       <Filter>Textures</Filter>
     </Image>
-    <Image Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\GoblinStatueBooty01.png">
+    <Image Include="image.png">
+      <Filter>Textures</Filter>
+    </Image>
+    <Image Include="font_0.png">
+      <Filter>Textures</Filter>
+    </Image>
+    <Image Include="GoblinStatueBooty01.png">
+      <Filter>Textures</Filter>
+    </Image>
+    <Image Include="Brick_Tut_Add_3_4.jpg">
       <Filter>Textures</Filter>
     </Image>
   </ItemGroup>
@@ -81,6 +70,18 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="MeshVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BitmapFontPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BitmapFontVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="imagePS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="imageVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

@@ -3,18 +3,15 @@
 #include "macros.h"
 #include "Log.h"
 
-
-namespace D3D11_Framework
+namespace D3D11Framework
 {
-	//------------------------------------------------------------------
+//------------------------------------------------------------------
 
-	
-	//------------------------------------------------------------------
-	Framework::Framework():
-		_wnd(nullptr),
-		_render(nullptr),
-		_input(nullptr),
-		_init(false)
+	Framework::Framework() :
+		m_wnd(nullptr),
+		m_render(nullptr),
+		m_input(nullptr),
+		m_init(false)
 	{
 	}
 
@@ -22,81 +19,77 @@ namespace D3D11_Framework
 	{
 	}
 
+	void Framework::AddInputListener(InputListener *listener)
+	{
+		if (m_input)
+			m_input->AddListener(listener);
+	}
+
 	bool Framework::Init(const FrameworkDesc &desc)
 	{
-		_render = desc.render;
-		
-		_wnd = new Window();
-		_input = new InputManager();
-		if(!_wnd || !_input)
+		m_render = desc.render;
+
+		m_wnd = new Window();
+		m_input = new InputMgr();
+
+		m_input->Init();
+
+		if (!m_wnd->Create(desc.wnd))
 		{
-			sLog->Err("Ќе удалось выделить пам€ть");
+			Log::Get()->Err("Ќе удалось создать окно");
 			return false;
 		}
-		
-		_input->Init();
+		m_wnd->SetInputMgr(m_input);
 
-		if (!_wnd->Create(desc.wnd))
+		if (!m_render->CreateDevice(m_wnd->GetHWND()))
 		{
-			sLog->Err("Ќе удалось создать окно");
-			return false;
-		}
-		
-		_wnd->SetInputManager(_input);
-
-		if (!_render->CreateDevice(_wnd->GetHWND()))
-		{
-			sLog->Err("Ќе удалось создать рендер");
+			Log::Get()->Err("Ќе удалось создать рендер");
 			return false;
 		}
 
-		_init = true;
+		m_init = true;
 		return true;
 	}
 
 	void Framework::Run()
 	{
-		if (_init)
-			while (_frame());
+		if (m_init)
+			while(m_frame());
+	}	
+
+	bool Framework::m_frame()
+	{
+		// обрабатываем событи€ окна
+		m_wnd->RunEvent();
+		// если окно неактивно - завершаем кадр
+		if (!m_wnd->IsActive())
+			return true;
+
+		// если окно было закрыто, завершаем работу движка
+		if (m_wnd->IsExit())
+			return false;
+
+		// если окно изменило размер
+		if (m_wnd->IsResize())
+		{
+		}
+
+		m_render->BeginFrame();
+		if (!m_render->Draw())
+			return false;
+		m_render->EndFrame();
+
+		return true;
 	}
 
 	void Framework::Close()
 	{
-		_init = false;
-		_render->Shutdown();
-		_DELETE(_render);
-		_CLOSE(_wnd);
-		_CLOSE(_input);
+		m_init = false;
+		m_render->Shutdown();
+		_DELETE(m_render);
+		_CLOSE(m_wnd);
+		_CLOSE(m_input);
 	}
 
-	void Framework::AddInputListener(InputListener* listener)
-	{
-		if (_input)
-			_input->AddListener(listener);
-	}
-
-	bool Framework::_frame()
-	{
-		// обрабатываем событи€ окна
-		_wnd->RunEvent();
-		// если окно неактивно - завершаем кадр
-		if (!_wnd->IsActive())
-			return true;
-
-		// если окно было закрыто, завершаем работу движка
-		if (_wnd->IsExit())
-			return false;
-
-		// если окно изменило размер
-		if (_wnd->IsResize())
-		{
-		}
-		_render->BeginFrame();
-		// если не отрисовалось, завершаем работу
-		if (!_render->Draw())
-			return false;
-		_render->EndFrame();
-		
-		return true;
-	}
+//------------------------------------------------------------------
 }

@@ -2,55 +2,40 @@
 
 #include "Window.h"
 #include "Render.h"
-#include "InputManager.h"
+#include "InputMgr.h"
 #include "Log.h"
 
-namespace D3D11_Framework
+namespace D3D11Framework
 {
-	//------------------------------------------------------------------
+//------------------------------------------------------------------
 
 	struct FrameworkDesc
 	{
 		DescWindow wnd;
-		Render* render;
+		Render *render;
 	};
-	
+
 	class Framework
 	{
 	public:
 		Framework();
 		~Framework();
 
-		/**
-		 * \brief инициализация
-		 * \return 
-		 */
-		bool Init(const FrameworkDesc& desc);
-		/**
-		 * \brief основной цикл программы
-		 */
+		bool Init(const FrameworkDesc &desc);
 		void Run();
 		void Close();
 
-		void AddInputListener(InputListener* listener);
+		void AddInputListener(InputListener *listener);
+	protected:	
+		bool m_frame();	
 
-		// оставлено для поддержки совместимости со старыми версиями)
-		
-	protected:
-		
-		/**
-		 * \brief расчёт одного кадра
-		 * \return 
-		 */
-		bool _frame();
-
-		FrameworkDesc _desc;
-		Window* _wnd;
-		Render* _render;
-		InputManager* _input;
-		Log _log;
-		bool _init;		// если было инициализировано
+		FrameworkDesc m_desc;
+		Window *m_wnd;
+		Render *m_render;
+		InputMgr *m_input;
+		Log m_log;
+		bool m_init;		// если было инициализировано
 	};
 
-	//------------------------------------------------------------------
+//------------------------------------------------------------------
 }
