@@ -5,9 +5,23 @@
 namespace D3D11Framework
 {
 	//------------------------------------------------------------------
+	struct Vertex
+	{
+		XMFLOAT3 Pos;
+		XMFLOAT3 Normal;
+		XMFLOAT2 Tex;
+	};
 
+	struct ConstantBuffer
+	{
+		XMMATRIX WVP;
+	};
+
+	
 	class StaticMesh
 	{
+
+		
 	public:
 		StaticMesh(Render *render);
 
@@ -20,6 +34,13 @@ namespace D3D11Framework
 		void Scale(float x, float y, float z);
 		void Identity();
 
+		bool InitBuffers(unsigned short VertexCount, unsigned short indexCount, unsigned short* indices, Vertex* vertices);
+
+		Shader* GetShader()
+		{
+			return m_shader;
+		}
+		
 
 		void* operator new(size_t i)
 		{
@@ -31,12 +52,13 @@ namespace D3D11Framework
 			_aligned_free(p);
 		}
 
-	private:
-		bool m_loadMS3DFile(wchar_t* name);
+	protected:
+		virtual bool m_loadFromFile(wchar_t* name) = 0;
 
 		void m_RenderBuffers();
 		void m_SetShaderParameters(CXMMATRIX viewmatrix);
 		void m_RenderShader();
+		
 
 		Render *m_render;
 

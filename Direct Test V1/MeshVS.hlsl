@@ -6,6 +6,7 @@ cbuffer cbPerObject
 struct VertexInputType
 {
 	float4 pos: POSITION;
+	float3 normal: NORMAL;
 	float2 tex: TEXCOORD;
 };
 

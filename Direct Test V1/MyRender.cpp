@@ -1,22 +1,34 @@
-#include "MyRender.h"
+#pragma once
 
+#include "MyRender.h"
 #include "Util.h"
 
 
-MyRender::MyRender()
+MyRender::MyRender(): frustum(), timer(), player(nullptr),
+                      moveForwardCam(false), moveBackCam(false),
+                      moveUpCam(false), moveDownCam(false),
+                      turnLeftCam(false), turnRightCam(false)
 {
 	mesh = nullptr;
+	model = nullptr;
 	font = nullptr;
 	text = nullptr;
-	leftcam = rightcam = false;
+	moveLeftCam = moveRightCam = false;
 }
 
 bool MyRender::Init()
 {
-	mesh = new StaticMesh(this);
+	mesh = new MeshMS3D(this);
 	if (!mesh->Init(w("sphere.ms3d")))
 		return false;
 
+	model = new Model(this);
+	model->Init(("labyrinth1.obj"));
+
+	player = new Model(this);
+	player->Init("grim.obj");
+	
+	
 	font = new BitmapFont(this);
 	if(!font->Init("font.fnt"))
 		return false;
@@ -35,11 +47,22 @@ bool MyRender::Init()
 	return true;
 }
 
+void MyRender::handleCamMove()
+{
+	cam.TurnLeft(turnLeftCam);
+	cam.TurnRight(turnRightCam);
+	cam.MoveDown(moveDownCam);
+	cam.MoveUp(moveUpCam);
+	cam.MoveBack(moveBackCam);
+	cam.MoveForward(moveForwardCam);
+	cam.MoveLeft(moveLeftCam);
+	cam.MoveRight(moveRightCam);
+}
+
 bool MyRender::Draw()
 {
 	timer.Frame();
-	cam.TurnLeft(leftcam);
-	cam.TurnRight(rightcam);
+	handleCamMove();
 	cam.Render(timer.GetTime());
 
 	XMMATRIX viewMatrix = cam.GetViewMatrix();
@@ -62,14 +85,23 @@ bool MyRender::Draw()
 			renderCount++;
 		}
 	}
+	model->Identity();
+	model->Scale(30, 30, 30);
+	model->Draw(viewMatrix);
 
-	Log::Get()->Debug("Сфер на экране %d", renderCount);
+	player->Identity();
+	player->Scale(0.05, 0.05, 0.05);
+	player->Draw(viewMatrix);
+	
+
 	TurnZBufferOff();
 	TurnOnAlphaBlending();
 
 	std::wstring t = L"Сфер на экране: " + intToStr(renderCount);
 	text->SetText(t);
 	text->Draw(1.0f, 1.0f, 1.0f, 20.0f, 20.0f);
+
+	
 
 	TurnZBufferOn();
 	TurnOffAlphaBlending();

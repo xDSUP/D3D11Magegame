@@ -1,5 +1,7 @@
 #pragma once
 
+#define sLog Log::Get()
+
 namespace D3D11Framework
 {
 //------------------------------------------------------------------

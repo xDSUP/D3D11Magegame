@@ -119,9 +119,14 @@ bool Shader::AddTexture(const wchar_t *name)
 		return false;
 	}
 
-	m_textures.push_back(texture);
+	AddTexture(texture);
 
 	return true;
+}
+
+void Shader::AddTexture(ID3D11ShaderResourceView* texture)
+{
+	m_textures.push_back(texture);
 }
 
 void Shader::Draw()
@@ -129,8 +134,10 @@ void Shader::Draw()
 	m_render->m_pImmediateContext->IASetInputLayout(m_layout);
 	m_render->m_pImmediateContext->VSSetShader(m_vertexShader, NULL, 0);
 	m_render->m_pImmediateContext->PSSetShader(m_pixelShader, NULL, 0);
-	if ( !m_textures.empty() )
+	if (!m_textures.empty())
 		m_render->m_pImmediateContext->PSSetShaderResources(0, m_textures.size(), &m_textures[0]);
+	else
+		m_render->m_pImmediateContext->PSSetShaderResources(0, 0, nullptr);
 }
 
 void Shader::Close()

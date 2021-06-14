@@ -64,6 +64,9 @@
     <ClInclude Include="Fps.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="MeshMS3D.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -112,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="Fps.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshMS3D.cpp">
+      <Filter>Mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,16 +10,26 @@
 using namespace D3D11Framework;
 using namespace std;
 
-struct Vertex
-{
-	XMFLOAT3 Pos;
-	XMFLOAT2 Tex;
-};
 
-struct ConstantBuffer
+
+bool StaticMesh::InitBuffers(unsigned short VertexCount, unsigned short indexCount, unsigned short* indices, Vertex* vertices)
 {
-	XMMATRIX WVP;
-};
+	m_vertexBuffer = Buffer::CreateVertexBuffer(m_render->GetDevice(), sizeof(Vertex) * VertexCount, false, vertices);
+	if (!m_vertexBuffer)
+		return false;
+
+	m_indexCount = indexCount;
+	m_indexBuffer = Buffer::CreateIndexBuffer(m_render->GetDevice(), sizeof(unsigned short) * indexCount, false, indices);
+	if (!m_indexBuffer)
+		return false;
+
+
+	m_constantBuffer = Buffer::CreateConstantBuffer(m_render->GetDevice(), sizeof(ConstantBuffer), false);
+	if (!m_constantBuffer)
+		return false;
+
+	return true;
+}
 
 StaticMesh::StaticMesh(Render *render)
 {
@@ -39,138 +49,19 @@ bool StaticMesh::Init(wchar_t *name)
 		return false;
 
 	m_shader->AddInputElementDesc("POSITION", DXGI_FORMAT_R32G32B32_FLOAT);
+	m_shader->AddInputElementDesc("NORMAL", DXGI_FORMAT_R32G32B32_FLOAT);
 	m_shader->AddInputElementDesc("TEXCOORD", DXGI_FORMAT_R32G32_FLOAT);
+	
+	//m_shader->AddInputElementDesc("TANGENT", DXGI_FORMAT_R32G32B32_FLOAT);
 	if ( !m_shader->CreateShader(L"meshVS.hlsl", L"meshPS.hlsl") )
 		return false;
 
-	if( !m_loadMS3DFile(name) )
+	if( !m_loadFromFile(name) )
 		return false;
 
 	return true;
 }
 
-bool StaticMesh::m_loadMS3DFile(wchar_t *Filename)
-{
-	unsigned short VertexCount = 0;
-	unsigned short TriangleCount = 0;
-	unsigned short GroupCount = 0;
-	unsigned short MaterialCount = 0;
-	MS3DVertex *pMS3DVertices = nullptr;
-	MS3DTriangle *pMS3DTriangles = nullptr;
-	MS3DGroup *pMS3DGroups = nullptr;
-	MS3DMaterial *pMS3DMaterials = nullptr;
-	MS3DHeader header;
-
-	ifstream fin;
-
-	fin.open( Filename,std::ios::binary );
-	fin.read((char*)(&(header)), sizeof(header));
-	if (header.version!=3 && header.version!=4)
-		return false;
-
-	fin.read((char*)(&VertexCount), sizeof(unsigned short));
-	pMS3DVertices = new MS3DVertex[VertexCount];
-	fin.read((char*)pMS3DVertices, VertexCount * sizeof(MS3DVertex));
-
-	fin.read((char*)(&TriangleCount), sizeof(unsigned short));
-	pMS3DTriangles = new MS3DTriangle[TriangleCount];
-	fin.read((char*)pMS3DTriangles, TriangleCount * sizeof(MS3DTriangle));
-
-	fin.read((char*)(&GroupCount), sizeof(unsigned short));
-	pMS3DGroups = new MS3DGroup[GroupCount];
-	for (int i = 0; i < GroupCount; i++)
-	{
-		fin.read((char*)&(pMS3DGroups[i].flags), sizeof(unsigned char));
-		fin.read((char*)&(pMS3DGroups[i].name), sizeof(char[32]));
-		fin.read((char*)&(pMS3DGroups[i].numtriangles), sizeof(unsigned short));
-		unsigned short triCount = pMS3DGroups[i].numtriangles;
-		pMS3DGroups[i].triangleIndices = new unsigned short[triCount];
-		fin.read((char*)(pMS3DGroups[i].triangleIndices), sizeof(unsigned short) * triCount);
-		fin.read((char*)&(pMS3DGroups[i].materialIndex), sizeof(char));		
-	}
-
-	fin.read((char*)(&MaterialCount),sizeof(unsigned short));
-	pMS3DMaterials = new MS3DMaterial[MaterialCount];
-	fin.read((char*)pMS3DMaterials, MaterialCount * sizeof(MS3DMaterial));
-
-	fin.close();
-
-	m_indexCount = TriangleCount*3;
-	unsigned short *indices = new unsigned short[m_indexCount];
-	if(!indices)
-		return false;
-	Vertex *vertices = new Vertex[VertexCount];
-	if(!vertices)
-		return false;
-
-	for (int i = 0; i < TriangleCount; i++ )
-	{
-		indices[3*i+0] = pMS3DTriangles[i].vertexIndices[0];
-		indices[3*i+1] = pMS3DTriangles[i].vertexIndices[1];
-		indices[3*i+2] = pMS3DTriangles[i].vertexIndices[2];
-	}
-
-	for (int i = 0; i < VertexCount; i++)
-	{
-		vertices[i].Pos.x = pMS3DVertices[i].vertex[0];
-		vertices[i].Pos.y = pMS3DVertices[i].vertex[1];
-		vertices[i].Pos.z = pMS3DVertices[i].vertex[2];
-
-		for (int j = 0; j < TriangleCount; j++ )
-		{
-			if (i == pMS3DTriangles[j].vertexIndices[0])
-			{
-				vertices[i].Tex.x = pMS3DTriangles[j].s[0];
-				vertices[i].Tex.y = pMS3DTriangles[j].t[0];
-			}
-			else if(i == pMS3DTriangles[j].vertexIndices[1])
-			{
-				vertices[i].Tex.x = pMS3DTriangles[j].s[1];
-				vertices[i].Tex.y = pMS3DTriangles[j].t[1];
-			}
-			else if(i == pMS3DTriangles[j].vertexIndices[2])
-			{
-				vertices[i].Tex.x = pMS3DTriangles[j].s[2];
-				vertices[i].Tex.y = pMS3DTriangles[j].t[2];
-			}
-			else
-				continue;
-			break;
-		}
-	}
-
-	wchar_t *name = CharToWChar(pMS3DMaterials[0].texture);
-	if ( !m_shader->AddTexture(name) )
-		return false;
-	_DELETE_ARRAY(name);
-
-	_DELETE_ARRAY(pMS3DMaterials);
-	if (pMS3DGroups != nullptr)
-	{
-		for (int i = 0; i < GroupCount; i++)
-			_DELETE_ARRAY(pMS3DGroups[i].triangleIndices);
-		_DELETE_ARRAY(pMS3DGroups);
-	}
-	_DELETE_ARRAY(pMS3DTriangles);
-	_DELETE_ARRAY(pMS3DVertices);
-
-	m_vertexBuffer = Buffer::CreateVertexBuffer(m_render->m_pd3dDevice, sizeof(Vertex)*VertexCount, false, vertices);
-	if (!m_vertexBuffer)
-		return false;
-
-	m_indexBuffer = Buffer::CreateIndexBuffer(m_render->m_pd3dDevice, sizeof(unsigned short)*m_indexCount, false, indices);
-	if (!m_indexBuffer)
-		return false;
-
-	m_constantBuffer = Buffer::CreateConstantBuffer(m_render->m_pd3dDevice, sizeof(ConstantBuffer), false);
-	if (!m_constantBuffer)
-		return false;
-
-	_DELETE_ARRAY(vertices);
-	_DELETE_ARRAY(indices);
-
-	return true;
-}
 
 void StaticMesh::Draw(CXMMATRIX viewmatrix)
 {

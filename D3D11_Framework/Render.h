@@ -32,6 +32,16 @@ namespace D3D11Framework
 		void TurnOnAlphaBlending();
 		void TurnOffAlphaBlending();
 
+		ID3D11DeviceContext* GetContext() const
+		{
+			return m_pImmediateContext;
+		}
+
+		ID3D11Device* GetDevice() const
+		{
+			return m_pd3dDevice;
+		}
+
 		void* operator new(size_t i)
 		{
 			return _aligned_malloc(i,16);

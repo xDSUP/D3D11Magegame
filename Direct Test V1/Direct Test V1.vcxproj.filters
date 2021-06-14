@@ -21,6 +21,8 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelList.cpp" />
     <ClCompile Include="MyRender.cpp" />
+    <ClCompile Include="AsimpMesh.cpp" />
+    <ClCompile Include="Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -29,6 +31,8 @@
     <ClInclude Include="ms3dspec.h" />
     <ClInclude Include="ModelList.h" />
     <ClInclude Include="MyRender.h" />
+    <ClInclude Include="AsimpMesh.h" />
+    <ClInclude Include="Model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -46,6 +50,9 @@
     </None>
     <None Include="shader.fx">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="labyrinth.mtl">
+      <Filter>Meshes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -84,5 +91,10 @@
     <FxCompile Include="imageVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="labyrinth.obj">
+      <Filter>Meshes</Filter>
+    </Object>
   </ItemGroup>
 </Project>

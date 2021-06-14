@@ -1,94 +1,207 @@
 #include "stdafx.h"
 #include "Camera.h"
 
+#include "Log.h"
+
 using namespace D3D11Framework;
 
-Camera::Camera()
+Camera::Camera(): viewMatrix(), rightMoveSpeed(0),
+ 				  upMoveSpeed(0), downMoveSpeed(0), 
+				  forwardMoveSpeed(0), backMoveSpeed(0)
 {
-	m_frameTime = 0.0f;
-	m_leftTurnSpeed = 0.0f;
-	m_rightTurnSpeed = 0.0f;
+	frameTime = 0.0f;
+	leftTurnSpeed = 0.0f;
+	rightTurnSpeed = 0.0f;
+	leftMoveSpeed = 0.0f;
 
-	m_pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	pos = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
 }
 
 void Camera::Render(float time)
 {
-	m_frameTime = time;
+	frameTime = time;
+	rot.z = 30;
+	float radians = rot.y * 0.0174532925f;
+	float radiansRight = (rot.y + 90) * 0.0174532925f;
+	float radiansZ = rot.y * 0.0174532925f;
+	
+	pos.x += sinf(radiansRight) * (rightMoveSpeed - leftMoveSpeed) + sinf(radians) * (forwardMoveSpeed - backMoveSpeed);
+	pos.y += upMoveSpeed - downMoveSpeed;
+	pos.z += cosf(radians) * (forwardMoveSpeed - backMoveSpeed) + cosf(radiansRight) * (rightMoveSpeed - leftMoveSpeed);
+	//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, radians);
 
-	float radians = m_rot.y * 0.0174532925f;
-	float lAtx = sinf(radians) + m_pos.x;
-	float lAty = m_pos.y;
-	float lAtz = cosf(radians) + m_pos.z;
-
-	XMVECTOR camPos = XMVectorSet(m_pos.x, m_pos.y, m_pos.z, 0.0f);
+	
+	float lAtx = sinf(radians) + pos.x;
+	float lAty = pos.y + sinf(radiansZ);
+	float lAtz = cosf(radians) + pos.z;
+	sLog->Debug("lAtXpos:%lf | lAtYpos:%lf | lAtZpos: %lf rad: %lf", lAtx, lAty, lAtz, radiansZ);
+	XMVECTOR camPos = XMVectorSet(pos.x, pos.y, pos.z, 0.0f);
 	XMVECTOR camLookAt = XMVectorSet( lAtx, lAty, lAtz, 0.0f );
-	XMVECTOR camUp = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+	XMVECTOR camUp = XMVectorSet( 0.0f, cosf(radiansZ), sinf(radiansZ), 0.0f );
 
-	m_viewMatrix = XMMatrixLookAtLH( camPos, camLookAt, camUp );
+	viewMatrix = XMMatrixLookAtLH( camPos, camLookAt, camUp );
 }
+
+void Camera::checkMaxSpeed(float& f)
+{
+	if (f > (frameTime * MIN_FRAME_TIME))
+		f = frameTime * MIN_FRAME_TIME;
+	
+}
+
+void Camera::checkNegate(float& f)
+{
+	if (f < 0.0f)
+		f = 0.0f;
+}
+
 
 void Camera::TurnLeft(bool keydown)
 {
 	if(keydown)
 	{
-		m_leftTurnSpeed += m_frameTime * 0.01f;
+		leftTurnSpeed += frameTime * SPEED_TURN;
 
-		if(m_leftTurnSpeed > (m_frameTime * 0.15f))
-			m_leftTurnSpeed = m_frameTime * 0.15f;
+		checkMaxSpeed(leftTurnSpeed);
 	}
 	else
 	{
-		m_leftTurnSpeed -= m_frameTime* 0.005f;
+		leftTurnSpeed -= frameTime* SPEED_TURN/2;
 
-		if(m_leftTurnSpeed < 0.0f)
-			m_leftTurnSpeed = 0.0f;
+		checkNegate(leftTurnSpeed);
 	}
 
-	m_rot.y -= m_leftTurnSpeed;
-	if(m_rot.y < 0.0f)
-		m_rot.y += 360.0f;
+	rot.y -= leftTurnSpeed;
+	if(rot.y < 0.0f)
+		rot.y += 360.0f;
 }
-
 
 void Camera::TurnRight(bool keydown)
 {
 	if(keydown)
 	{
-		m_rightTurnSpeed += m_frameTime * 0.01f;
+		rightTurnSpeed += frameTime * SPEED_TURN;
 
-		if(m_rightTurnSpeed > (m_frameTime * 0.15f))
-			m_rightTurnSpeed = m_frameTime * 0.15f;
+		checkMaxSpeed(rightTurnSpeed);
 	}
 	else
 	{
-		m_rightTurnSpeed -= m_frameTime* 0.005f;
+		rightTurnSpeed -= frameTime* SPEED_TURN/2;
 
-		if(m_rightTurnSpeed < 0.0f)
-			m_rightTurnSpeed = 0.0f;
+		checkNegate(rightTurnSpeed);
 	}
 
-	m_rot.y += m_rightTurnSpeed;
-	if(m_rot.y > 360.0f)
-		m_rot.y -= 360.0f;
+	rot.y += rightTurnSpeed;
+	if(rot.y > 360.0f)
+		rot.y -= 360.0f;
+}
+
+void Camera::MoveForward(bool keydown)
+{
+	if (keydown)
+	{
+		forwardMoveSpeed += frameTime * SPEED_MOVE;
+
+		checkMaxSpeed(forwardMoveSpeed);
+	}
+	else
+	{
+		forwardMoveSpeed -= frameTime * SPEED_MOVE / 2;
+
+		checkNegate(forwardMoveSpeed);
+	}
+}
+
+void Camera::MoveBack(bool keydown)
+{
+	if (keydown)
+	{
+		backMoveSpeed += frameTime * SPEED_MOVE;
+		checkMaxSpeed(backMoveSpeed);
+	}
+	else
+	{
+		backMoveSpeed -= frameTime * SPEED_MOVE / 2;
+		checkNegate(backMoveSpeed);
+	}
+}
+
+void Camera::MoveLeft(bool keydown)
+{
+	if (keydown)
+	{
+		leftMoveSpeed += frameTime * SPEED_MOVE;
+		checkMaxSpeed(leftMoveSpeed);
+	}
+	else
+	{
+		leftMoveSpeed -= frameTime * SPEED_MOVE / 2;
+		checkNegate(leftMoveSpeed);
+	}
+}
+
+void Camera::MoveRight(bool keydown)
+{
+	if (keydown)
+	{
+		rightMoveSpeed += frameTime * SPEED_MOVE;
+		checkMaxSpeed(rightMoveSpeed);
+	}
+	else
+	{
+		rightMoveSpeed -= frameTime * SPEED_MOVE/2;
+		checkNegate(rightMoveSpeed);
+	}
+}
+
+void Camera::MoveUp(bool keydown)
+{
+	if (keydown)
+	{
+		upMoveSpeed += frameTime * SPEED_MOVE;
+
+		checkMaxSpeed(upMoveSpeed);
+	}
+	else
+	{
+		upMoveSpeed -= frameTime * SPEED_MOVE / 2;
+
+		checkNegate(upMoveSpeed);
+	}
+}
+
+void Camera::MoveDown(bool keydown)
+{
+	if (keydown)
+	{
+		downMoveSpeed += frameTime * SPEED_MOVE;
+
+		checkMaxSpeed(downMoveSpeed);
+	}
+	else
+	{
+		downMoveSpeed -= frameTime * SPEED_MOVE / 2;
+
+		checkNegate(downMoveSpeed);
+	}
 }
 
 void Camera::SetPosition(float x, float y, float z)
 {
-	m_pos.x = x;
-	m_pos.y = y;
-	m_pos.z = z;
+	pos.x = x;
+	pos.y = y;
+	pos.z = z;
 }
 
 void Camera::SetRotation(float x, float y, float z)
 {
-	m_rot.x = x;
-	m_rot.y = y;
-	m_rot.z = z;
+	rot.x = x;
+	rot.y = y;
+	rot.z = z;
 }
 
 CXMMATRIX Camera::GetViewMatrix()
 {
-	return m_viewMatrix;
+	return viewMatrix;
 }
