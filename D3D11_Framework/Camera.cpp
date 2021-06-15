@@ -21,10 +21,10 @@ Camera::Camera(): viewMatrix(), rightMoveSpeed(0),
 void Camera::Render(float time)
 {
 	frameTime = time;
-	rot.z = 30;
+	rot.z = 0;
 	float radians = rot.y * 0.0174532925f;
 	float radiansRight = (rot.y + 90) * 0.0174532925f;
-	float radiansZ = rot.y * 0.0174532925f;
+	float radiansZ = rot.z * 0.0174532925f;
 	
 	pos.x += sinf(radiansRight) * (rightMoveSpeed - leftMoveSpeed) + sinf(radians) * (forwardMoveSpeed - backMoveSpeed);
 	pos.y += upMoveSpeed - downMoveSpeed;
@@ -33,11 +33,12 @@ void Camera::Render(float time)
 
 	
 	float lAtx = sinf(radians) + pos.x;
-	float lAty = pos.y + sinf(radiansZ);
-	float lAtz = cosf(radians) + pos.z;
-	sLog->Debug("lAtXpos:%lf | lAtYpos:%lf | lAtZpos: %lf rad: %lf", lAtx, lAty, lAtz, radiansZ);
+	float lAty = pos.y - cosf(radiansZ);
+	float lAtz = cosf(radians) + pos.z + sinf(radiansZ);
+	//sLog->Debug("lAtXpos:%lf | lAtYpos:%lf | lAtZpos: %lf rad: %lf", lAtx, lAty, lAtz, radiansZ);
 	XMVECTOR camPos = XMVectorSet(pos.x, pos.y, pos.z, 0.0f);
 	XMVECTOR camLookAt = XMVectorSet( lAtx, lAty, lAtz, 0.0f );
+	
 	XMVECTOR camUp = XMVectorSet( 0.0f, cosf(radiansZ), sinf(radiansZ), 0.0f );
 
 	viewMatrix = XMMatrixLookAtLH( camPos, camLookAt, camUp );

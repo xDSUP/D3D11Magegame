@@ -10,7 +10,7 @@ MyRender::MyRender(): frustum(), timer(), player(nullptr),
                       turnLeftCam(false), turnRightCam(false)
 {
 	mesh = nullptr;
-	model = nullptr;
+	labirint = nullptr;
 	font = nullptr;
 	text = nullptr;
 	moveLeftCam = moveRightCam = false;
@@ -22,12 +22,15 @@ bool MyRender::Init()
 	if (!mesh->Init(w("sphere.ms3d")))
 		return false;
 
-	model = new Model(this);
-	model->Init(("labyrinth1.obj"));
+	labirint = new Model(this);
+	labirint->Init(("maze.obj"));
 
-	player = new Model(this);
-	player->Init("grim.obj");
-	
+	player = new Player();
+	player->InitModel(this, "grim.obj");
+	player->SetSpeedTurn(2);
+	player->SetSpeedMove(1);
+	player->SetMaxFrameTime(1);
+	player->SetPosition(0, 0.2, 0);
 	
 	font = new BitmapFont(this);
 	if(!font->Init("font.fnt"))
@@ -43,7 +46,8 @@ bool MyRender::Init()
 	if(!timer.Init())
 		return false;
 
-	cam.SetPosition(0.0f, 0.0f, -35.0f);
+	cam.SetPosition(0.0f, 14.0f, -14.0f);
+	cam.SetRotation(1, 0, 0);
 	return true;
 }
 
@@ -85,12 +89,10 @@ bool MyRender::Draw()
 			renderCount++;
 		}
 	}
-	model->Identity();
-	model->Scale(30, 30, 30);
-	model->Draw(viewMatrix);
+	labirint->Identity();
+	labirint->Scale(2, 2, 2);
+	labirint->Draw(viewMatrix);
 
-	player->Identity();
-	player->Scale(0.05, 0.05, 0.05);
 	player->Draw(viewMatrix);
 	
 
@@ -115,5 +117,10 @@ void MyRender::Close()
 	_CLOSE(text);
 	_CLOSE(mesh);
 	modelList.Close();
+}
+
+Player* MyRender::GetPlayer()
+{
+	return player;
 }
 

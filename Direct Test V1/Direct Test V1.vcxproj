@@ -163,23 +163,31 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AsimpMesh.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelList.cpp" />
+    <ClCompile Include="MovableGameObject.cpp" />
     <ClCompile Include="MyRender.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsimpMesh.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputHandler.h" />
+    <ClInclude Include="LightHelper.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelList.h" />
+    <ClInclude Include="MovableGameObject.h" />
     <ClInclude Include="ms3dspec.h" />
     <ClInclude Include="MyRender.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\mesh.ms3d" />
     <None Include="font.fnt" />
+    <None Include="grim.mtl" />
     <None Include="labyrinth.mtl" />
     <None Include="packages.config" />
     <None Include="Shader.dgsl" />
@@ -194,6 +202,13 @@
     <Image Include="Brick_Tut_Add_3_4.jpg" />
     <Image Include="font_0.png" />
     <Image Include="GoblinStatueBooty01.png" />
+    <Image Include="grim_arm.png" />
+    <Image Include="grim_bones.png" />
+    <Image Include="grim_hglass.png" />
+    <Image Include="grim_hood.png" />
+    <Image Include="grim_skull.png" />
+    <Image Include="grim_torso01.png" />
+    <Image Include="grim_torso02.png" />
     <Image Include="image.png" />
     <Image Include="texture.png" />
   </ItemGroup>
@@ -247,6 +262,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <Object Include="grim.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Object>
     <Object Include="labyrinth.obj">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

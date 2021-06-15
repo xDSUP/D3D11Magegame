@@ -30,7 +30,20 @@ bool InputHandler::KeyPressed(const KeyEvent& arg)
 	case KEY_SPACE:
 		render->SetMoveUpCam(true);
 		break;
+	case KEY_LEFT:
+		player->SetTurnLeft(true);
+		break;
+	case KEY_RIGHT:
+		player->SetTurnRight(true);
+		break;
+	case KEY_UP:
+		player->SetMoveForward(true);
+		break;
+	case KEY_DOWN:
+		player->SetMoveBack(true);
+		break;
 	}
+	
 	return true;
 }
 
@@ -62,7 +75,20 @@ bool InputHandler::KeyReleased(const KeyEvent& arg)
 	case KEY_SPACE:
 		render->SetMoveUpCam(false);
 		break;
+	case KEY_LEFT:
+		player->SetTurnLeft(false);
+		break;
+	case KEY_RIGHT:
+		player->SetTurnRight(false);
+		break;
+	case KEY_UP:
+		player->SetMoveForward(false);
+		break;
+	case KEY_DOWN:
+		player->SetMoveBack(false);
+		break;
 	}
+	
 	return true;
 }
 

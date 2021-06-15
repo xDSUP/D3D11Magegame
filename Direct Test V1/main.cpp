@@ -12,7 +12,7 @@ int main()
 	Framework framework;
 
 	MyRender* render = new MyRender();
-	InputListener* input = new InputHandler(render);
+	
 
 	FrameworkDesc desc;
 	desc.wnd.width = 640;
@@ -20,6 +20,7 @@ int main()
 	desc.render = render;
 	
 	framework.Init(desc);
+	InputListener* input = new InputHandler(render, render->GetPlayer());
 	framework.AddInputListener(input);
 
 	framework.Run();

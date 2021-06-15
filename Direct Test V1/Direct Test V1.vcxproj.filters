@@ -13,26 +13,74 @@
     <Filter Include="Meshes">
       <UniqueIdentifier>{a9a0cd15-16a3-44a6-9a35-065b9f58ba2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Models">
+      <UniqueIdentifier>{1c385cfa-eab3-4827-bbd3-767d67db8373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObjects">
+      <UniqueIdentifier>{f9f38826-c99b-434a-af74-a2832a00f8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{d02beddf-f408-4fb4-8e7c-42ff7cf90eac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
       <Filter>Input</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelList.cpp" />
-    <ClCompile Include="MyRender.cpp" />
-    <ClCompile Include="AsimpMesh.cpp" />
-    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Model.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelList.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="AsimpMesh.cpp">
+      <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MovableGameObject.cpp">
+      <Filter>GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRender.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
       <Filter>Input</Filter>
     </ClInclude>
-    <ClInclude Include="ms3dspec.h" />
-    <ClInclude Include="ModelList.h" />
-    <ClInclude Include="MyRender.h" />
-    <ClInclude Include="AsimpMesh.h" />
-    <ClInclude Include="Model.h" />
+    <ClInclude Include="Model.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelList.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="AsimpMesh.h">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MovableGameObject.h">
+      <Filter>GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRender.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ms3dspec.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="LightHelper.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -54,6 +102,9 @@
     <None Include="labyrinth.mtl">
       <Filter>Meshes</Filter>
     </None>
+    <None Include="grim.mtl">
+      <Filter>Meshes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture.png">
@@ -70,6 +121,27 @@
     </Image>
     <Image Include="Brick_Tut_Add_3_4.jpg">
       <Filter>Textures</Filter>
+    </Image>
+    <Image Include="grim_arm.png">
+      <Filter>Meshes</Filter>
+    </Image>
+    <Image Include="grim_bones.png">
+      <Filter>Meshes</Filter>
+    </Image>
+    <Image Include="grim_hglass.png">
+      <Filter>Meshes</Filter>
+    </Image>
+    <Image Include="grim_hood.png">
+      <Filter>Meshes</Filter>
+    </Image>
+    <Image Include="grim_skull.png">
+      <Filter>Meshes</Filter>
+    </Image>
+    <Image Include="grim_torso01.png">
+      <Filter>Meshes</Filter>
+    </Image>
+    <Image Include="grim_torso02.png">
+      <Filter>Meshes</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="labyrinth.obj">
+      <Filter>Meshes</Filter>
+    </Object>
+    <Object Include="grim.obj">
       <Filter>Meshes</Filter>
     </Object>
   </ItemGroup>

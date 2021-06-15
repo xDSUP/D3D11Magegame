@@ -6,6 +6,7 @@
 #include "Frustum.h"
 #include "Model.h"
 #include "ModelList.h"
+#include "Player.h"
 #include "Timer.h"
 
 using namespace D3D11Framework;
@@ -63,14 +64,16 @@ public:
 		return &cam;
 	}
 
+	Player* GetPlayer();
+
 private:
 	ModelList	modelList;
 	Camera		cam;
 	Frustum		frustum;
 	Timer		timer;
 
-	Model* model;
-	Model* player;
+	Model* labirint;
+	Player* player;
 	StaticMesh* mesh;
 
 	BitmapFont* font;

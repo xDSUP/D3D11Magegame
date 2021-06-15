@@ -37,6 +37,7 @@ namespace D3D11Framework
 		XMMATRIX viewMatrix;
 		XMFLOAT3 pos;
 		XMFLOAT3 rot;
+		
 
 		float frameTime;
 		float leftTurnSpeed, rightTurnSpeed;

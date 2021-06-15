@@ -40,3 +40,8 @@ inline std::wstring intToStr(int i)
 	swprintf(str, 255, L"%d", i);
 	return str; 
 }
+
+inline float convertDegreeToRad(float d)
+{
+	return d * 0.0174532925f;
+}

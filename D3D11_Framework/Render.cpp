@@ -156,12 +156,14 @@ void Render::m_initmatrix()
 {
 	float aspect = (float)m_width/(float)m_height;
 	m_Projection = XMMatrixPerspectiveFovLH( 0.4f*3.14f, aspect, 1.0f, 1000.0f);
+	//m_Projection = XMMatrixOrthographicLH( 0.4f*3.14f, aspect, 1.0f, 1000.0f);
+		
 	m_Ortho = XMMatrixOrthographicLH((float)m_width, (float)m_height, 0.0f, 1.0f);
 }
 
 void Render::BeginFrame()
 {
-	float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
+	float ClearColor[4] = { 0.0f, 0.1f, 0.1f, 1.0f };
 	m_pImmediateContext->ClearRenderTargetView( m_pRenderTargetView, ClearColor );
 	m_pImmediateContext->ClearDepthStencilView( m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 }
