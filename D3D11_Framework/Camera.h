@@ -30,6 +30,10 @@ namespace D3D11Framework
 
 		void SetPosition(float x, float y, float z);
 		void SetRotation(float x, float y, float z);
+		XMFLOAT3 GetPosition()
+		{
+			return pos;
+		}
 
 		CXMMATRIX GetViewMatrix();
 

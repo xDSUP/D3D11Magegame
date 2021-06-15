@@ -12,7 +12,6 @@ int main()
 	Framework framework;
 
 	MyRender* render = new MyRender();
-	
 
 	FrameworkDesc desc;
 	desc.wnd.width = 640;

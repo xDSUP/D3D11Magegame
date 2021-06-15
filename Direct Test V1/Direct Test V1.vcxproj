@@ -176,7 +176,6 @@
     <ClInclude Include="AsimpMesh.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputHandler.h" />
-    <ClInclude Include="LightHelper.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelList.h" />
     <ClInclude Include="MovableGameObject.h" />
@@ -185,10 +184,14 @@
     <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Basic.hlsli">
+      <FileType>Document</FileType>
+    </None>
     <None Include="E:\Files\илья\directx 11 примеры\lesson b1\lesson\bin\mesh.ms3d" />
     <None Include="font.fnt" />
     <None Include="grim.mtl" />
     <None Include="labyrinth.mtl" />
+    <None Include="LightHelper.hlsli" />
     <None Include="packages.config" />
     <None Include="Shader.dgsl" />
     <None Include="sphere.ms3d" />
@@ -213,6 +216,14 @@
     <Image Include="texture.png" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Basic_PS_3D.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Basic_VS_3D.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="BitmapFontPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <EnableDebuggingInformation Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</EnableDebuggingInformation>

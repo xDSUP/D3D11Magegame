@@ -78,9 +78,6 @@
     <ClInclude Include="ms3dspec.h">
       <Filter>Meshes</Filter>
     </ClInclude>
-    <ClInclude Include="LightHelper.h">
-      <Filter>Render</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -104,6 +101,9 @@
     </None>
     <None Include="grim.mtl">
       <Filter>Meshes</Filter>
+    </None>
+    <None Include="LightHelper.hlsli">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +161,15 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="imageVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Basic_PS_3D.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Basic_VS_3D.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Basic.hlsli">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

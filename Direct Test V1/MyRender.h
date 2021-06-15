@@ -59,16 +59,12 @@ public:
 		this->turnRightCam = turnRightCam;
 	}
 
-	Camera* GetCam()
-	{
-		return &cam;
-	}
 
 	Player* GetPlayer();
 
 private:
 	ModelList	modelList;
-	Camera		cam;
+	
 	Frustum		frustum;
 	Timer		timer;
 

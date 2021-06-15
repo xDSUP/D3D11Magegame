@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "Render.h"
 #include "macros.h"

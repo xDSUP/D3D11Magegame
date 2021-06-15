@@ -1,5 +1,10 @@
 #pragma once
 
+
+#include <vector>
+
+#include "Camera.h"
+#include "LightHelper.h"
 #include "RenderState.h"
 
 namespace D3D11Framework
@@ -42,6 +47,26 @@ namespace D3D11Framework
 			return m_pd3dDevice;
 		}
 
+		std::vector<DirectionalLight> GetDirectionalLights() const
+		{
+			return m_DirectionalLights;
+		}
+
+		std::vector<PointLight> GetPointLights() const
+		{
+			return m_PointLights;
+		}
+
+		std::vector<SpotLight> GetSpotLights() const
+		{
+			return m_SpotLights;
+		}
+
+		Camera* GetCam()
+		{
+			return &cam;
+		}
+		
 		void* operator new(size_t i)
 		{
 			return _aligned_malloc(i,16);
@@ -60,6 +85,10 @@ namespace D3D11Framework
 
 		RenderState *m_renderstate;
 
+		std::vector<DirectionalLight> m_DirectionalLights;
+		std::vector<PointLight> m_PointLights;
+		std::vector<SpotLight> m_SpotLights;
+		
 		ID3D11Device *m_pd3dDevice;
 		ID3D11DeviceContext *m_pImmediateContext;
 		IDXGISwapChain *m_pSwapChain;
@@ -70,6 +99,9 @@ namespace D3D11Framework
 		HWND m_hwnd;
 		unsigned int m_width;
 		unsigned int m_height;
+
+
+		Camera		cam;
 	};
 
 //------------------------------------------------------------------

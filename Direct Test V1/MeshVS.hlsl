@@ -1,7 +1,4 @@
-cbuffer cbPerObject
-{
-	float4x4 WVP;
-}
+#include "Basic.hlsli"
 
 struct VertexInputType
 {
@@ -10,17 +7,16 @@ struct VertexInputType
 	float2 tex: TEXCOORD;
 };
 
-struct PixelInputType
-{
-	float4 pos: SV_POSITION;
-	float2 tex: TEXCOORD;
-};
 
-PixelInputType main(VertexInputType input)
+VertexPosHWNormalTex main(VertexInputType input)
 {
-	PixelInputType output;
-	output.pos = mul(input.pos, WVP);
-	output.tex = input.tex;
-	
-	return output;
+	VertexPosHWNormalTex vOut;
+	//matrix viewProj = mul(g_View, g_Proj);
+	//float4 posW = mul(float4(input.pos, 1.0f), g_World);
+
+	vOut.PosH = mul(input.pos, WVP);
+	vOut.PosW = mul(input.pos, g_World);
+	vOut.NormalW = mul(input.normal, (float3x3) g_WorldInvTranspose);
+	vOut.Tex = input.tex;
+	return vOut;
 }

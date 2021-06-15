@@ -31,6 +31,7 @@ namespace D3D11Framework
 		ID3D11PixelShader *m_pixelShader;
 		ID3D11InputLayout *m_layout;
 		std::vector<ID3D11ShaderResourceView *> m_textures;
+		
 		D3D11_INPUT_ELEMENT_DESC *m_layoutformat;
 		unsigned int m_numlayout;
 	};

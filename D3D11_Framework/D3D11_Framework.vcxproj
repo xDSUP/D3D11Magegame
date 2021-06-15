@@ -191,6 +191,7 @@
     <ClInclude Include="InputCodes.h" />
     <ClInclude Include="InputListener.h" />
     <ClInclude Include="InputMgr.h" />
+    <ClInclude Include="LightHelper.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="macros.h" />
     <ClInclude Include="MeshMS3D.h" />

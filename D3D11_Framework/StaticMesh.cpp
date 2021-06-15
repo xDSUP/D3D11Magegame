@@ -24,19 +24,24 @@ bool StaticMesh::InitBuffers(unsigned short VertexCount, unsigned short indexCou
 		return false;
 
 
-	m_constantBuffer = Buffer::CreateConstantBuffer(m_render->GetDevice(), sizeof(ConstantBuffer), false);
-	if (!m_constantBuffer)
+	m_VSConstantBuffer = Buffer::CreateConstantBuffer(m_render->GetDevice(), sizeof(VSConstantBuffer), false);
+	if (!m_VSConstantBuffer)
+		return false;
+
+	m_PSConstantBuffer = Buffer::CreateConstantBuffer(m_render->GetDevice(), sizeof(PSConstantBuffer), false);
+	if (!m_VSConstantBuffer)
 		return false;
 
 	return true;
 }
 
 StaticMesh::StaticMesh(Render *render)
+: m_PSConstantBuffer(nullptr), m_indexCount(0)
 {
 	m_render = render;
 	m_vertexBuffer = nullptr;
 	m_indexBuffer = nullptr;
-	m_constantBuffer = nullptr;
+	m_VSConstantBuffer = nullptr;
 	m_shader = nullptr;
 }
 
@@ -81,16 +86,32 @@ void StaticMesh::m_RenderBuffers()
 
 void StaticMesh::m_SetShaderParameters(CXMMATRIX viewmatrix)
 {
-	XMMATRIX WVP = m_objMatrix * viewmatrix * m_render->m_Projection;	
-	ConstantBuffer cb;
+	XMMATRIX WVP = m_objMatrix * viewmatrix * m_render->m_Projection;
+	
+	VSConstantBuffer cb;
+	cb.world = XMMatrixTranspose(m_objMatrix);
 	cb.WVP = XMMatrixTranspose(WVP);
-	m_render->m_pImmediateContext->UpdateSubresource( m_constantBuffer, 0, NULL, &cb, 0, 0 );
+	cb.worldInvTranspose = XMMatrixTranspose(InverseTranspose(m_objMatrix));
+	m_render->m_pImmediateContext->UpdateSubresource( m_VSConstantBuffer, 0, NULL, &cb, 0, 0 );
+	m_render->m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_VSConstantBuffer);
 
-	m_render->m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_constantBuffer);
+	
+	PSConstantBuffer cbPS;
+	cbPS.dirLight = m_render->GetDirectionalLights().back();
+	cbPS.pointLight = m_render->GetPointLights().back();
+	cbPS.spotLight= m_render->GetSpotLights().back();
+	cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	cbPS.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	cbPS.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
+	auto pos = m_render->GetCam()->GetPosition();
+	cbPS.eyePos = XMFLOAT4(pos.x, pos.y, pos.z, 1);
+	m_render->m_pImmediateContext->UpdateSubresource(m_PSConstantBuffer, 0, NULL, &cbPS, 0, 0);
+	m_render->m_pImmediateContext->PSSetConstantBuffers(1, 1, &m_PSConstantBuffer);
 }
 
 void StaticMesh::m_RenderShader()
 {
+	m_shader->Draw();
 	m_shader->Draw();
 	m_render->m_pImmediateContext->DrawIndexed(m_indexCount, 0, 0);
 }
@@ -99,7 +120,8 @@ void StaticMesh::Close()
 {
 	_RELEASE(m_indexBuffer);
 	_RELEASE(m_vertexBuffer);
-	_RELEASE(m_constantBuffer);
+	_RELEASE(m_VSConstantBuffer);
+	_RELEASE(m_PSConstantBuffer);
 	_CLOSE(m_shader);
 }
 

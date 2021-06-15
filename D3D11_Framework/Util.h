@@ -45,3 +45,16 @@ inline float convertDegreeToRad(float d)
 {
 	return d * 0.0174532925f;
 }
+
+
+inline XMMATRIX XM_CALLCONV InverseTranspose(DirectX::FXMMATRIX M)
+{
+	// “ранспонирование обратной мировой матрицы выполн€етс€ только
+	// дл€ нормального вектора, и нам не нужен компонент трансл€ции мировой матрицы
+	// » если вы не удалите его, то умножьте его на матрицу наблюдени€
+	// и тому подобное приведет к неправильному результату преобразовани€
+	XMMATRIX A = M;
+	A.r[3] = g_XMIdentityR3;
+
+	return XMMatrixTranspose(XMMatrixInverse(nullptr, A));
+}

@@ -48,6 +48,33 @@ bool MyRender::Init()
 
 	cam.SetPosition(0.0f, 14.0f, -14.0f);
 	cam.SetRotation(1, 0, 0);
+
+	DirectionalLight m_DirLight;
+	m_DirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_DirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
+	m_DirectionalLights.push_back(m_DirLight);
+
+	PointLight m_PointLight;
+	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
+	m_PointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	m_PointLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
+	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_PointLight.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
+	m_PointLight.range = 25.0f;
+	m_PointLights.push_back(m_PointLight);
+
+	SpotLight m_SpotLight;
+	m_SpotLight.position = XMFLOAT3(0.0f, 0.0f, -5.0f);
+	m_SpotLight.direction = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	m_SpotLight.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_SpotLight.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_SpotLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_SpotLight.att = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	m_SpotLight.spot = 12.0f;
+	m_SpotLight.range = 10000.0f;
+	m_SpotLights.push_back(m_SpotLight);
 	return true;
 }
 
