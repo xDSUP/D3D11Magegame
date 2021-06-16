@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Buffer.h"
 
+#include "Log.h"
+#include "comutil.h"
+#include <comdef.h>
+#include <iostream>
+
 using namespace D3D11Framework;
 
 ID3D11Buffer* Buffer::CreateVertexBuffer(ID3D11Device *device, int size, bool dynamic, const void *Mem)
@@ -27,9 +32,7 @@ ID3D11Buffer* Buffer::CreateVertexBuffer(ID3D11Device *device, int size, bool dy
 	Data.pSysMem = Mem;
 	Data.SysMemPitch = 0;
 	Data.SysMemSlicePitch = 0;
-	HRESULT hr = device->CreateBuffer(&BufferDesc, &Data, &vb);
-	if( FAILED(hr) )
-		return nullptr;
+	HRNull(device->CreateBuffer(&BufferDesc, &Data, &vb));
 
 	return vb;
 }
@@ -58,10 +61,7 @@ ID3D11Buffer* Buffer::CreateIndexBuffer(ID3D11Device *device, int size, bool dyn
 	Data.pSysMem = Mem;
 	Data.SysMemPitch = 0;
 	Data.SysMemSlicePitch = 0;
-	HRESULT hr = device->CreateBuffer(&BufferDesc, &Data, &ib);
-	if( FAILED(hr) )
-		return nullptr;
-
+	HRNull(device->CreateBuffer(&BufferDesc, &Data, &ib));
 	return ib;
 }
 
@@ -70,10 +70,9 @@ ID3D11Buffer* Buffer::CreateConstantBuffer(ID3D11Device *device, int size, bool 
 	ID3D11Buffer *cb = nullptr;
 
 	D3D11_BUFFER_DESC BufferDesc;
+	ZeroMemory(&BufferDesc, sizeof(BufferDesc));
 	BufferDesc.ByteWidth = size;
 	BufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;	
-	BufferDesc.MiscFlags = 0;
-	BufferDesc.StructureByteStride = 0;
 	if (dynamic)
 	{
 		BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -85,9 +84,6 @@ ID3D11Buffer* Buffer::CreateConstantBuffer(ID3D11Device *device, int size, bool 
 		BufferDesc.CPUAccessFlags = 0;
 	}	
 
-	HRESULT hr = device->CreateBuffer(&BufferDesc, NULL, &cb);
-	if( FAILED(hr) )
-		return nullptr;
-
+	HRNull(device->CreateBuffer(&BufferDesc, nullptr, &cb));
 	return cb;
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "MyRender.h"
+
+#include "FireBallGenerator.h"
 #include "Util.h"
 
 
@@ -12,7 +14,7 @@ MyRender::MyRender(): frustum(), timer(), player(nullptr),
 	mesh = nullptr;
 	labirint = nullptr;
 	font = nullptr;
-	text = nullptr;
+	textNumSphere = nullptr;
 	moveLeftCam = moveRightCam = false;
 }
 
@@ -21,6 +23,9 @@ bool MyRender::Init()
 	mesh = new MeshMS3D(this);
 	if (!mesh->Init(w("sphere.ms3d")))
 		return false;
+
+	FireBallGenerator::model = mesh;
+	FireBallGenerator::timer = &timer;
 
 	labirint = new Model(this);
 	labirint->Init(("maze.obj"));
@@ -36,8 +41,12 @@ bool MyRender::Init()
 	if(!font->Init("font.fnt"))
 		return false;
 
-	text = new Text(this, font);
-	if(!text->Init(L"", false, 20))
+	textNumSphere = new Text(this, font);
+	if(!textNumSphere->Init(L"", false, 20))
+		return false;
+
+	textCamCoord = new Text(this, font);
+	if (!textCamCoord->Init(L"", false, 30))
 		return false;
 
 	if(!modelList.Init(300))
@@ -54,7 +63,8 @@ bool MyRender::Init()
 	m_DirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
 	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
-	m_DirectionalLights.push_back(m_DirLight);
+	m_DirectionalLights[0] = m_DirLight;
+	numDirLight = 1;
 
 	PointLight m_PointLight;
 	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
@@ -62,8 +72,11 @@ bool MyRender::Init()
 	m_PointLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_PointLight.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
+	//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
 	m_PointLight.range = 25.0f;
-	m_PointLights.push_back(m_PointLight);
+	m_PointLights[0] = m_PointLight;
+	//m_PointLights[0] = *player->GetTorchLight();
+	numPointLight = 1;
 
 	SpotLight m_SpotLight;
 	m_SpotLight.position = XMFLOAT3(0.0f, 0.0f, -5.0f);
@@ -74,7 +87,9 @@ bool MyRender::Init()
 	m_SpotLight.att = XMFLOAT3(1.0f, 0.0f, 0.0f);
 	m_SpotLight.spot = 12.0f;
 	m_SpotLight.range = 10000.0f;
-	m_SpotLights.push_back(m_SpotLight);
+	m_SpotLights[0] = m_SpotLight;
+	numSpotLight = 1;
+
 	return true;
 }
 
@@ -94,7 +109,7 @@ bool MyRender::Draw()
 {
 	timer.Frame();
 	handleCamMove();
-	cam.Render(timer.GetTime());
+	cam.Render(timer.GetFrameTime());
 
 	XMMATRIX viewMatrix = cam.GetViewMatrix();
 	frustum.ConstructFrustum(1000, m_Projection, viewMatrix);
@@ -122,16 +137,41 @@ bool MyRender::Draw()
 
 	player->Draw(viewMatrix);
 	
+	if(fireBalls.size() > 0)
+	{
+		list<FireBall*> delFireballs;
+		for (FireBall* fireBall : fireBalls)
+
+		{
+			fireBall->UpdatePos(timer.GetFrameTime());
+			fireBall->Draw(viewMatrix);
+			if(fireBall->lifeTime < 0)
+			{
+				delFireballs.push_front(fireBall);
+			}
+		}
+		for (FireBall* fireBall : delFireballs)
+		{
+			fireBalls.remove(fireBall);
+			delete fireBall;
+		}
+	}
+	
 
 	TurnZBufferOff();
 	TurnOnAlphaBlending();
 
 	std::wstring t = L"Сфер на экране: " + intToStr(renderCount);
-	text->SetText(t);
-	text->Draw(1.0f, 1.0f, 1.0f, 20.0f, 20.0f);
-
 	
+	textNumSphere->SetText(t);
+	textNumSphere->Draw(1.0f, 1.0f, 1.0f, 20.0f, 10.0f);
 
+	t = L"Cam: x = " + intToStr(cam.GetPosition().x) + 
+		L" y = " + intToStr(cam.GetPosition().y) + 
+		L" z = " + intToStr(cam.GetPosition().z);
+	textCamCoord->SetText(t);
+	textCamCoord->Draw(1.0f, 1.0f, 1.0f, 20.0f, 30.0f);
+	
 	TurnZBufferOn();
 	TurnOffAlphaBlending();
 
@@ -141,8 +181,9 @@ bool MyRender::Draw()
 void MyRender::Close()
 {
 	_CLOSE(font);
-	_CLOSE(text);
+	_CLOSE(textNumSphere);
 	_CLOSE(mesh);
+	//_CLOSE(player);
 	modelList.Close();
 }
 

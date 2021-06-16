@@ -49,6 +49,7 @@ namespace D3D11Framework
 
 		// 打包成4D向量: (position, range)
 		DirectX::XMFLOAT3 position;
+		//DirectX::XMFLOAT3 color;
 		float range;
 
 		// 打包成4D向量: (A0, A1, A2, pad)

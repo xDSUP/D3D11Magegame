@@ -47,19 +47,34 @@ namespace D3D11Framework
 			return m_pd3dDevice;
 		}
 
-		std::vector<DirectionalLight> GetDirectionalLights() const
+		DirectionalLight* GetDirectionalLights() 
 		{
 			return m_DirectionalLights;
 		}
 
-		std::vector<PointLight> GetPointLights() const
+		PointLight* GetPointLights()  
 		{
 			return m_PointLights;
 		}
 
-		std::vector<SpotLight> GetSpotLights() const
+		SpotLight* GetSpotLights() 
 		{
 			return m_SpotLights;
+		}
+
+		int NumDirLight() const
+		{
+			return numDirLight;
+		}
+
+		int NumPointLight() const
+		{
+			return numPointLight;
+		}
+
+		int NumSpotLight() const
+		{
+			return numSpotLight;
 		}
 
 		Camera* GetCam()
@@ -85,9 +100,12 @@ namespace D3D11Framework
 
 		RenderState *m_renderstate;
 
-		std::vector<DirectionalLight> m_DirectionalLights;
-		std::vector<PointLight> m_PointLights;
-		std::vector<SpotLight> m_SpotLights;
+		DirectionalLight m_DirectionalLights[4];
+		PointLight m_PointLights[10];
+		SpotLight m_SpotLights[4];
+		int numDirLight;
+		int numPointLight;
+		int numSpotLight;
 		
 		ID3D11Device *m_pd3dDevice;
 		ID3D11DeviceContext *m_pImmediateContext;
@@ -99,8 +117,6 @@ namespace D3D11Framework
 		HWND m_hwnd;
 		unsigned int m_width;
 		unsigned int m_height;
-
-
 		Camera		cam;
 	};
 

@@ -28,7 +28,14 @@ void Timer::Frame()
 	m_startTime = currentTime;
 }
 
-float Timer::GetTime()
+float Timer::GetFrameTime()
 {
 	return m_frameTime;
+}
+
+INT64 Timer::GetCurTime()
+{
+	INT64 currentTime;
+	QueryPerformanceCounter((LARGE_INTEGER*)&currentTime);
+	return currentTime;
 }
