@@ -23,11 +23,16 @@ namespace D3D11Framework
 
 	struct PSConstantBuffer
 	{
-		DirectionalLight dirLight;
-		PointLight pointLight;
-		SpotLight spotLight;
+		DirectionalLight dirLight [4] ;
+		PointLight pointLight[10];
+		SpotLight spotLight[4];
+		float numDirLight;
+		float numPointLight;
+		float numSpotLight;
 		Material material;
 		XMFLOAT4 eyePos;
+		float pad1;
+		//float pad2;
 	};
 	
 		

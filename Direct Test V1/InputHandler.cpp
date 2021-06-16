@@ -1,5 +1,7 @@
 #include "InputHandler.h"
 
+#include "FireBallGenerator.h"
+
 
 bool InputHandler::KeyPressed(const KeyEvent& arg)
 {
@@ -92,8 +94,22 @@ bool InputHandler::KeyReleased(const KeyEvent& arg)
 	return true;
 }
 
+bool InputHandler::MousePressed(const MouseEventClick& arg)
+{
+	if(arg.btn == MOUSE_LEFT)
+	{
+		auto pos = player->GetPosition();
+		pos.y += 2;
+		render->AddFireBallToRender(FireBallGenerator::Generate(pos, player->GetRotation(), 100));
+		
+	}
+	printf("mouse %d - %d\n", arg.x, arg.y);
+	
+	return true;
+}
+
 bool InputHandler::MouseMove(const MouseEvent& arg)
 	{
-		printf("mouse %d - %d\n", arg.x, arg.y);
+		//printf("mouse %d - %d\n", arg.x, arg.y);
 		return false;
 	}

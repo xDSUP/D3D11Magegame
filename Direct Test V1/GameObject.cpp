@@ -14,3 +14,13 @@ void GameObject::SetRotation(float x, float y, float z)
 	rot.z = z;
 }
 
+XMFLOAT3 GameObject::GetPosition()
+{
+	return pos;
+}
+
+XMFLOAT3 GameObject::GetRotation()
+{
+	return rot;
+}
+

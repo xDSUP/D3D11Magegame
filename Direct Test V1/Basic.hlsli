@@ -13,12 +13,16 @@ cbuffer VSConstantBuffer : register(b0)
 
 cbuffer PSConstantBuffer : register(b1)
 {
-    DirectionalLight g_DirLight;
-    PointLight g_PointLight;
-    SpotLight g_SpotLight;
+    DirectionalLight g_DirLight[4] ;
+    PointLight g_PointLight[10];
+    SpotLight g_SpotLight[4];
     Material g_Material;
     float3 g_EyePosW;
-    float g_Pad;
+    float g_NumDirLight;
+    float g_NumPointLight;
+    float g_NumSpotLight;
+    float g_Pad1;
+    //float g_Pad2;
 }
 
 struct VertexPosNormalTex

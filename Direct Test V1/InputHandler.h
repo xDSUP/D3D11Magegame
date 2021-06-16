@@ -19,6 +19,7 @@ public:
 	bool KeyPressed(const KeyEvent& arg) override;
 	bool KeyReleased(const KeyEvent& arg) override;
 
+	bool MousePressed(const MouseEventClick& arg) override;
 private:
 	MyRender* render;
 	Player* player;

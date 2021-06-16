@@ -6,6 +6,9 @@
 #include "Util.h"
 #include "Shader.h"
 #include "Buffer.h"
+#include "Log.h"
+#include "comutil.h"
+#include <comdef.h>
 
 using namespace D3D11Framework;
 using namespace std;
@@ -28,10 +31,11 @@ bool StaticMesh::InitBuffers(unsigned short VertexCount, unsigned short indexCou
 	if (!m_VSConstantBuffer)
 		return false;
 
-	m_PSConstantBuffer = Buffer::CreateConstantBuffer(m_render->GetDevice(), sizeof(PSConstantBuffer), false);
-	if (!m_VSConstantBuffer)
+	m_PSConstantBuffer = Buffer::CreateConstantBuffer(m_render->GetDevice(), sizeof(PSConstantBuffer), true);
+	if (!m_PSConstantBuffer)
+	{
 		return false;
-
+	}
 	return true;
 }
 
@@ -97,21 +101,47 @@ void StaticMesh::m_SetShaderParameters(CXMMATRIX viewmatrix)
 
 	
 	PSConstantBuffer cbPS;
-	cbPS.dirLight = m_render->GetDirectionalLights().back();
-	cbPS.pointLight = m_render->GetPointLights().back();
-	cbPS.spotLight= m_render->GetSpotLights().back();
-	cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	cbPS.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	cbPS.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
+	for (size_t i = 0; i < m_render->NumDirLight(); i++)
+		cbPS.dirLight[i] = m_render->GetDirectionalLights()[i];
+	
+	for (size_t i = 0; i < m_render->NumPointLight(); i++)
+		cbPS.pointLight[i] = m_render->GetPointLights()[i];
+	
+	for (size_t i = 0; i < m_render->NumSpotLight(); i++)
+		cbPS.spotLight[i] = m_render->GetSpotLights()[i];
+	
+	cbPS.numDirLight = m_render->NumDirLight();
+	cbPS.numPointLight = m_render->NumPointLight();
+	cbPS.numSpotLight = m_render->NumSpotLight();
+
+	if(m_material.diffuse.x > 0)
+	{
+		cbPS.material.ambient = m_material.ambient;
+		cbPS.material.diffuse =	m_material.diffuse;
+		cbPS.material.specular = m_material.specular;
+		cbPS.material.reflect = m_material.reflect;
+	}
+	else
+	{
+		cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		cbPS.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		cbPS.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
+	}
+	
 	auto pos = m_render->GetCam()->GetPosition();
 	cbPS.eyePos = XMFLOAT4(pos.x, pos.y, pos.z, 1);
-	m_render->m_pImmediateContext->UpdateSubresource(m_PSConstantBuffer, 0, NULL, &cbPS, 0, 0);
+
+	D3D11_MAPPED_SUBRESOURCE mappedData;
+	HR(m_render->m_pImmediateContext->Map(m_PSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
+	memcpy_s(mappedData.pData, sizeof(PSConstantBuffer), &cbPS, sizeof(PSConstantBuffer));
+	m_render->m_pImmediateContext->Unmap(m_PSConstantBuffer, 0);
+
+	
 	m_render->m_pImmediateContext->PSSetConstantBuffers(1, 1, &m_PSConstantBuffer);
 }
 
 void StaticMesh::m_RenderShader()
 {
-	m_shader->Draw();
 	m_shader->Draw();
 	m_render->m_pImmediateContext->DrawIndexed(m_indexCount, 0, 0);
 }

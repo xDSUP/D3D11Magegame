@@ -10,7 +10,8 @@ namespace D3D11Framework
 		bool Init();
 		void Frame();
 
-		float GetTime();
+		float GetFrameTime();
+		INT64 GetCurTime();
 
 	private:
 		INT64 m_frequency;

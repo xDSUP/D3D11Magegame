@@ -58,3 +58,4 @@ inline XMMATRIX XM_CALLCONV InverseTranspose(DirectX::FXMMATRIX M)
 
 	return XMMatrixTranspose(XMMatrixInverse(nullptr, A));
 }
+

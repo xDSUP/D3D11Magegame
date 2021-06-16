@@ -3,6 +3,7 @@
 #include "AsimpMesh.h"
 #include "Camera.h"
 #include "D3D11_Framework.h"
+#include "FireBall.h"
 #include "Frustum.h"
 #include "Model.h"
 #include "ModelList.h"
@@ -59,7 +60,13 @@ public:
 		this->turnRightCam = turnRightCam;
 	}
 
+	void AddFireBallToRender(FireBall* fireball)
+	{
+		fireBalls.push_back(fireball);
+	}
 
+
+	
 	Player* GetPlayer();
 
 private:
@@ -71,9 +78,11 @@ private:
 	Model* labirint;
 	Player* player;
 	StaticMesh* mesh;
+	list<FireBall*> fireBalls;
 
 	BitmapFont* font;
-	Text*		text;
+	Text*		textNumSphere;
+	Text*		textCamCoord;
 
 	bool		moveLeftCam;
 	bool		moveRightCam;
@@ -83,6 +92,6 @@ private:
 	bool		moveDownCam;
 	bool		turnLeftCam;
 	bool		turnRightCam;
-	
+
 	void handleCamMove();
 };

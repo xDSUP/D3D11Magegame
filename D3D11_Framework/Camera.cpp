@@ -29,7 +29,7 @@ void Camera::Render(float time)
 	pos.x += sinf(radiansRight) * (rightMoveSpeed - leftMoveSpeed) + sinf(radians) * (forwardMoveSpeed - backMoveSpeed);
 	pos.y += upMoveSpeed - downMoveSpeed;
 	pos.z += cosf(radians) * (forwardMoveSpeed - backMoveSpeed) + cosf(radiansRight) * (rightMoveSpeed - leftMoveSpeed);
-	//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, radians);
+	sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, radians);
 
 	
 	float lAtx = sinf(radians) + pos.x;

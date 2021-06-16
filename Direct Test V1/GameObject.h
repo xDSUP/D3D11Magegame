@@ -9,6 +9,8 @@ public :
 	GameObject() = default;
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
+	XMFLOAT3 GetPosition();
+	XMFLOAT3 GetRotation();
 	void virtual Draw(CXMMATRIX view) = 0;
 
 protected:

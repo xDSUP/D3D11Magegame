@@ -18,6 +18,7 @@ struct PointLight
 
     float3 Position;
     float Range;
+    //float3 Color;
 
     float3 Att;
     float Pad;

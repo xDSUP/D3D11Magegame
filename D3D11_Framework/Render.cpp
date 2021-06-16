@@ -164,7 +164,7 @@ void Render::m_initmatrix()
 
 void Render::BeginFrame()
 {
-	float ClearColor[4] = { 0.0f, 0.1f, 0.1f, 1.0f };
+	float ClearColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
 	m_pImmediateContext->ClearRenderTargetView( m_pRenderTargetView, ClearColor );
 	m_pImmediateContext->ClearDepthStencilView( m_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 }

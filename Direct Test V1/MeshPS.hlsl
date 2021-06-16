@@ -14,21 +14,31 @@ float4 main(VertexPosHWNormalTex pIn) : SV_Target
     float4 D = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float4 S = float4(0.0f, 0.0f, 0.0f, 0.0f);
     int i;
+
+    for (i = 0; i < g_NumDirLight; i++)
+    {
+        ComputeDirectionalLight(g_Material, g_DirLight[i], pIn.NormalW, toEyeW, A, D, S);
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
     
-    ComputeDirectionalLight(g_Material, g_DirLight, pIn.NormalW, toEyeW, A, D, S);
-    ambient += A;
-    diffuse += D;
-    spec += S;
+
+    for (i = 0; i < g_NumPointLight; i++)
+    {
+        ComputePointLight(g_Material, g_PointLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
     
-    ComputePointLight(g_Material, g_PointLight, pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-    ambient += A;
-    diffuse += D;
-    spec += S;
-    
-    ComputeSpotLight(g_Material, g_SpotLight, pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
-    ambient += A;
-    diffuse += D;
-    spec += S;
+    for (i = 0; i < g_NumSpotLight; i++)
+    {
+        ComputeSpotLight(g_Material, g_SpotLight[i], pIn.PosW, pIn.NormalW, toEyeW, A, D, S);
+        ambient += A;
+        diffuse += D;
+        spec += S;
+    }
 
     float4 texColor = g_Tex.Sample(g_SamLinear, pIn.Tex);
     float4 litColor = texColor * (ambient + diffuse) + spec;
