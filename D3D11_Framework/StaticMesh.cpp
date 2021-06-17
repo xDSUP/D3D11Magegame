@@ -103,9 +103,13 @@ void StaticMesh::m_SetShaderParameters(CXMMATRIX viewmatrix)
 	PSConstantBuffer cbPS;
 	for (size_t i = 0; i < m_render->NumDirLight(); i++)
 		cbPS.dirLight[i] = m_render->GetDirectionalLights()[i];
-	
-	for (size_t i = 0; i < m_render->NumPointLight(); i++)
-		cbPS.pointLight[i] = m_render->GetPointLights()[i];
+
+	int i = 0;
+	for (auto l : m_render->GetPointLights())
+	{
+		memcpy_s(&cbPS.pointLight[i], sizeof(PointLight), &l->light, sizeof(PointLight));
+		i++;
+	}
 	
 	for (size_t i = 0; i < m_render->NumSpotLight(); i++)
 		cbPS.spotLight[i] = m_render->GetSpotLights()[i];
@@ -125,11 +129,11 @@ void StaticMesh::m_SetShaderParameters(CXMMATRIX viewmatrix)
 	{
 		cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 		cbPS.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		cbPS.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
+		cbPS.material.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 5.0f);
 	}
 	
 	auto pos = m_render->GetCam()->GetPosition();
-	cbPS.eyePos = XMFLOAT4(pos.x, pos.y, pos.z, 1);
+	cbPS.eyePos = XMFLOAT4(pos.x, pos.y, pos.z, 0);
 
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	HR(m_render->m_pImmediateContext->Map(m_PSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));

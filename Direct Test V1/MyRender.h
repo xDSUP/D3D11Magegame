@@ -63,11 +63,11 @@ public:
 	void AddFireBallToRender(FireBall* fireball)
 	{
 		fireBalls.push_back(fireball);
+		AddPointLight(fireball->light);
 	}
-
-
 	
 	Player* GetPlayer();
+	XMFLOAT3 GetWorldCords(int x, int y);
 
 private:
 	ModelList	modelList;

@@ -38,8 +38,6 @@ namespace D3D11Framework
 		
 	class StaticMesh
 	{
-
-		
 	public:
 		StaticMesh(Render *render);
 

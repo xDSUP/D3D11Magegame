@@ -55,6 +55,9 @@
     <ClCompile Include="FireBallGenerator.cpp">
       <Filter>Models</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleGenerator.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InputHandler.h">
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="FireBallGenerator.h">
       <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleGenerator.h">
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +186,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Basic_VS_3D.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
