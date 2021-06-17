@@ -3,7 +3,10 @@
 #include "MyRender.h"
 
 #include "FireBallGenerator.h"
+#include "ParticleGenerator.h"
 #include "Util.h"
+
+#define SimpleXMVector(r) XMVectorSet(r, r, r, 0);
 
 
 MyRender::MyRender(): frustum(), timer(), player(nullptr),
@@ -16,6 +19,42 @@ MyRender::MyRender(): frustum(), timer(), player(nullptr),
 	font = nullptr;
 	textNumSphere = nullptr;
 	moveLeftCam = moveRightCam = false;
+}
+
+void MyRender::initLight()
+{
+	DirectionalLight m_DirLight;
+	m_DirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_DirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
+	m_DirectionalLights[0] = m_DirLight;
+	numDirLight = 1;
+
+	PointLight m_PointLight;
+	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
+	m_PointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	m_PointLight.diffuse = XMFLOAT4(0.5f, 0.2f, 0.2f, 1.0f);
+	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_PointLight.att = XMFLOAT3(0.8f, 0.1f, 0.0f);
+	//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
+	m_PointLight.range = 25.0f;
+	
+	AddPointLight(*player->GetTorchLight());
+	//m_PointLights.push_back(m_PointLight);
+	
+
+	SpotLight m_SpotLight;
+	m_SpotLight.position = XMFLOAT3(0.0f, 0.0f, -5.0f);
+	m_SpotLight.direction = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	m_SpotLight.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_SpotLight.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_SpotLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_SpotLight.att = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	m_SpotLight.spot = 12.0f;
+	m_SpotLight.range = 10000.0f;
+	m_SpotLights[0] = m_SpotLight;
+	numSpotLight = 1;
 }
 
 bool MyRender::Init()
@@ -58,39 +97,12 @@ bool MyRender::Init()
 	cam.SetPosition(0.0f, 14, -14.0f);
 	cam.SetRotation(0, 0, 0);
 
-	DirectionalLight m_DirLight;
-	m_DirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	m_DirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
-	m_DirectionalLights[0] = m_DirLight;
-	numDirLight = 0;
+	initLight();
 
-	PointLight m_PointLight;
-	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
-	m_PointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	m_PointLight.diffuse = XMFLOAT4(0.5f, 0.2f, 0.2f, 1.0f);
-	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_PointLight.att = XMFLOAT3(0.8f, 0.1f, 0.0f);
-	//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
-	m_PointLight.range = 25.0f;
-	
-	AddPointLight(*player->GetTorchLight());
-	//m_PointLights.push_back(m_PointLight);
-	
-
-	SpotLight m_SpotLight;
-	m_SpotLight.position = XMFLOAT3(0.0f, 0.0f, -5.0f);
-	m_SpotLight.direction = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	m_SpotLight.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	m_SpotLight.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_SpotLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_SpotLight.att = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	m_SpotLight.spot = 12.0f;
-	m_SpotLight.range = 10000.0f;
-	m_SpotLights[0] = m_SpotLight;
-	numSpotLight = 0;
-
+	torchParticleGenerator = new ParticleGenerator(this);
+	if (!torchParticleGenerator->Init(w("particle.png"), 200, XMFLOAT3(0, 0.01f, 0)))
+		return false;
+	torchParticleGenerator->model = mesh;
 	return true;
 }
 
@@ -106,38 +118,8 @@ void MyRender::handleCamMove()
 	cam.MoveRight(moveRightCam);
 }
 
-bool MyRender::Draw()
+void MyRender::updateAndDrawFireBalls(XMMATRIX viewMatrix)
 {
-	timer.Frame();
-	handleCamMove();
-	cam.Render(timer.GetFrameTime());
-
-	XMMATRIX viewMatrix = cam.GetViewMatrix();
-	frustum.ConstructFrustum(1000, m_Projection, viewMatrix);
-
-	int modelCount = modelList.GetModelCount();
-	int renderCount = 0;
-
-	for (int i = 0; i < modelCount; i++)
-	{
-		float x, y, z;
-		modelList.GetData(i, x, y, z);
-		bool renderModel = frustum.CheckSphere(x, y, z, 1);
-		if(renderModel)
-		{
-			mesh->Identity();
-			mesh->Translate(x, y, z);
-			mesh->Draw(viewMatrix);
-
-			renderCount++;
-		}
-	}
-	labirint->Identity();
-	labirint->Scale(2, 2, 2);
-	labirint->Draw(viewMatrix);
-
-	player->Draw(viewMatrix);
-	
 	if(fireBalls.size() > 0)
 	{
 		list<FireBall*> delFireballs;
@@ -170,14 +152,55 @@ bool MyRender::Draw()
 			fireBalls.remove(fireBall);
 			//std::advance(it, iter._Ptr->_Myval); // <-- advance итерирует переданный итератор на k позиций
 			
-			 // <--- Вернет итератор на k+1 элемент, перед it нет *
+			// <--- Вернет итератор на k+1 элемент, перед it нет *
 			delete fireBall;
 		}
 	}
+}
+
+bool MyRender::Draw()
+{
+	timer.Frame();
+	handleCamMove();
+	auto frameTime = timer.GetFrameTime();
+	cam.Render(frameTime);
+
+	XMMATRIX viewMatrix = cam.GetViewMatrix();
+	frustum.ConstructFrustum(1000, m_Projection, viewMatrix);
+
+	int modelCount = modelList.GetModelCount();
+	int renderCount = 0;
+
+	for (int i = 0; i < modelCount; i++)
+	{
+		float x, y, z;
+		modelList.GetData(i, x, y, z);
+		bool renderModel = frustum.CheckSphere(x, y, z, 1);
+		if(renderModel)
+		{
+			mesh->Identity();
+			mesh->Translate(x, y, z);
+			mesh->Draw(viewMatrix);
+
+			renderCount++;
+		}
+	}
+	labirint->Identity();
+	labirint->Scale(2, 2, 2);
+	labirint->Draw(viewMatrix);
+
+	player->Draw(viewMatrix);
+	
+	
 	
 
 	TurnZBufferOff();
 	TurnOnAlphaBlending();
+
+	updateAndDrawFireBalls(viewMatrix);
+	torchParticleGenerator->Update(frameTime, player->GetTorchLight()->position, 2);
+	torchParticleGenerator->Draw(viewMatrix);
+	
 
 	std::wstring t = L"Сфер на экране: " + intToStr(renderCount);
 	

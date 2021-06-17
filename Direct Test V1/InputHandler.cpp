@@ -17,6 +17,24 @@ bool InputHandler::KeyPressed(const KeyEvent& arg)
 	case KEY_W:
 		render->SetMoveForwardCam(true);
 		break;
+	case KEY_1:
+		player->torchPos.x += 0.1;
+		break;
+	case KEY_2:
+		player->torchPos.x -= 0.1;
+		break;
+	case KEY_3:
+		player->torchPos.y += 0.1;
+		break;
+	case KEY_4:
+		player->torchPos.y -= 0.1;
+		break;
+	case KEY_5:
+		player->torchPos.z += 0.1;
+		break;
+	case KEY_6:
+		player->torchPos.z -= 0.1;
+		break;
 	case KEY_S:
 		render->SetMoveBackCam(true);
 		break;
@@ -126,7 +144,7 @@ bool InputHandler::MousePressed(const MouseEventClick& arg)
 
 			rot.x = 0;
 			rot.z = 0;
-			render->AddFireBallToRender(FireBallGenerator::Generate(pos, rot, 10000));
+			render->AddFireBallToRender(FireBallGenerator::Generate(pos, rot, 2000));
 		}
 	}
 	

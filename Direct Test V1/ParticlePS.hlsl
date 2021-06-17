@@ -3,11 +3,13 @@ SamplerState sampleType;
 
 struct PixelInputType
 {
-    float4 pos : SV_POSITION;
-    float2 tex : TEXCOORD;
+	float4 Pos: SV_POSITION;
+	float4 Color : COLOR;
+	float2 Tex : TEXCOORD;
 };
 
 float4 main(PixelInputType input) : SV_TARGET
 {
-    return shaderTexture.Sample(sampleType, input.tex);
+	//return shaderTexture.Sample(sampleType, input.Tex);// *input.Color;
+	return input.Color;
 }

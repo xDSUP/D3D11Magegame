@@ -11,7 +11,7 @@ struct VertexInputType
 
 struct PixelInputType
 {
-	float4 pos:SV_POSITION;
+	float4 Pos:SV_POSITION;
 	float2 tex:TEXCOORD;
 };
 
@@ -19,7 +19,7 @@ PixelInputType main( VertexInputType input )
 {
 	PixelInputType output;
 
-	output.pos = mul(input.pos, ortho);
+	output.Pos = mul(input.pos, ortho);
 	output.tex = input.tex;
 	
 	return output;

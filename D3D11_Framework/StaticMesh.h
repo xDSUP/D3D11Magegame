@@ -45,10 +45,11 @@ namespace D3D11Framework
 		void Draw(CXMMATRIX viewmatrix);
 		void Close();
 
+		void Identity();
 		void Translate(float x, float y, float z);
 		void Rotate(float angle, float x, float y, float z);
 		void Scale(float x, float y, float z);
-		void Identity();
+		
 
 		bool InitBuffers(unsigned short VertexCount, unsigned short indexCount, unsigned short* indices, Vertex* vertices);
 

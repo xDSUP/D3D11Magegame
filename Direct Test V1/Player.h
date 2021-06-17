@@ -13,7 +13,6 @@ public:
 		
 	}
 
-	
 
 	bool InitModel(Render* render, const char* path)
 	{
@@ -27,6 +26,7 @@ public:
 		torchLight.att = XMFLOAT3(1.0f, 0.1f, 0.0f);
 		//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
 		torchLight.range = 10.0f;
+		torchPos = XMFLOAT3(-1, 4, 1);
 		
 		return model->Init(path);
 	}
@@ -35,6 +35,8 @@ public:
 	{
 		return model;
 	}
+
+	XMFLOAT3 torchPos;
 
 	void Draw(CXMMATRIX view) override
 	{
@@ -50,12 +52,19 @@ public:
 			pos.z += (forwardMoveSpeed - backMoveSpeed) * cosf(rad);
 		}
 		model->Translate(pos.x , pos.y, pos.z);
-		torchLight.position.x = pos.x + 1;
-		torchLight.position.y = pos.y + 3;
-		torchLight.position.z = pos.z + 1;
+		XMMATRIX lightPos = XMMatrixIdentity();
+		lightPos *= XMMatrixTranslation(torchPos.x, torchPos.y, torchPos.z);
+
+		XMVECTOR v = XMVectorSet(0, 1, 0, 0.0f);
+		lightPos *= XMMatrixRotationAxis(v, rad);
+		lightPos *= XMMatrixTranslation(pos.x, pos.y, pos.z);
+
+		torchLight.position.x = pos.x + torchPos.x;
+		torchLight.position.y = pos.y + torchPos.y;
+		torchLight.position.z = pos.z + torchPos.z;
 		
 		//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, rot.y);
-		
+		//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", torchPos.x, torchPos.y, torchPos.z);
 		(render->GetPointLights().begin()._Ptr->_Myval)->light.position = this->GetTorchLight()->position;
 		model->Draw(view);
 	}
