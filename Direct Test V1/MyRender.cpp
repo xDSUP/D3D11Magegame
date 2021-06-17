@@ -3,7 +3,10 @@
 #include "MyRender.h"
 
 #include "FireBallGenerator.h"
+#include "ParticleGenerator.h"
 #include "Util.h"
+
+#define SimpleXMVector(r) XMVectorSet(r, r, r, 0);
 
 
 MyRender::MyRender(): frustum(), timer(), player(nullptr),
@@ -16,6 +19,42 @@ MyRender::MyRender(): frustum(), timer(), player(nullptr),
 	font = nullptr;
 	textNumSphere = nullptr;
 	moveLeftCam = moveRightCam = false;
+}
+
+void MyRender::initLight()
+{
+	DirectionalLight m_DirLight;
+	m_DirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_DirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
+	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
+	m_DirectionalLights[0] = m_DirLight;
+	numDirLight = 1;
+
+	PointLight m_PointLight;
+	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
+	m_PointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+	m_PointLight.diffuse = XMFLOAT4(0.5f, 0.2f, 0.2f, 1.0f);
+	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+	m_PointLight.att = XMFLOAT3(0.8f, 0.1f, 0.0f);
+	//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
+	m_PointLight.range = 25.0f;
+	
+	AddPointLight(*player->GetTorchLight());
+	//m_PointLights.push_back(m_PointLight);
+	
+
+	SpotLight m_SpotLight;
+	m_SpotLight.position = XMFLOAT3(0.0f, 0.0f, -5.0f);
+	m_SpotLight.direction = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	m_SpotLight.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
+	m_SpotLight.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_SpotLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+	m_SpotLight.att = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	m_SpotLight.spot = 12.0f;
+	m_SpotLight.range = 10000.0f;
+	m_SpotLights[0] = m_SpotLight;
+	numSpotLight = 1;
 }
 
 bool MyRender::Init()
@@ -55,41 +94,15 @@ bool MyRender::Init()
 	if(!timer.Init())
 		return false;
 
-	cam.SetPosition(0.0f, 14.0f, -14.0f);
-	cam.SetRotation(1, 0, 0);
+	cam.SetPosition(0.0f, 14, -14.0f);
+	cam.SetRotation(0, 0, 0);
 
-	DirectionalLight m_DirLight;
-	m_DirLight.ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-	m_DirLight.diffuse = XMFLOAT4(0.8f, 0.8f, 0.8f, 1.0f);
-	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
-	m_DirectionalLights[0] = m_DirLight;
-	numDirLight = 1;
+	initLight();
 
-	PointLight m_PointLight;
-	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
-	m_PointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-	m_PointLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
-	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_PointLight.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
-	//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
-	m_PointLight.range = 25.0f;
-	m_PointLights[0] = m_PointLight;
-	//m_PointLights[0] = *player->GetTorchLight();
-	numPointLight = 1;
-
-	SpotLight m_SpotLight;
-	m_SpotLight.position = XMFLOAT3(0.0f, 0.0f, -5.0f);
-	m_SpotLight.direction = XMFLOAT3(0.0f, 0.0f, 1.0f);
-	m_SpotLight.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
-	m_SpotLight.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_SpotLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	m_SpotLight.att = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	m_SpotLight.spot = 12.0f;
-	m_SpotLight.range = 10000.0f;
-	m_SpotLights[0] = m_SpotLight;
-	numSpotLight = 1;
-
+	torchParticleGenerator = new ParticleGenerator(this);
+	if (!torchParticleGenerator->Init(w("particle.png"), 200, XMFLOAT3(0, 0.01f, 0)))
+		return false;
+	torchParticleGenerator->model = mesh;
 	return true;
 }
 
@@ -105,11 +118,52 @@ void MyRender::handleCamMove()
 	cam.MoveRight(moveRightCam);
 }
 
+void MyRender::updateAndDrawFireBalls(XMMATRIX viewMatrix)
+{
+	if(fireBalls.size() > 0)
+	{
+		list<FireBall*> delFireballs;
+		//list<int> delIndFireballs;
+		list<PointLightCont*>::iterator it = m_PointLights.begin();
+		int i = 1;
+		std::advance(it, 1);
+		for (FireBall* fireBall : fireBalls)
+		{
+			
+			fireBall->UpdatePos(timer.GetFrameTime());
+			it._Ptr->_Myval->light.position = fireBall->light.position;
+			fireBall->Draw(viewMatrix);
+			
+			if (fireBall->lifeTime < 0)
+			{
+				delFireballs.push_back(fireBall);
+				//delIndFireballs.push_back(i);
+				it = m_PointLights.erase(it);
+			}
+			else
+			{
+				std::advance(it, 1);
+			}
+			i++;
+		}
+		//auto iter = delIndFireballs.begin();
+		for (FireBall* fireBall : delFireballs)
+		{
+			fireBalls.remove(fireBall);
+			//std::advance(it, iter._Ptr->_Myval); // <-- advance итерирует переданный итератор на k позиций
+			
+			// <--- Вернет итератор на k+1 элемент, перед it нет *
+			delete fireBall;
+		}
+	}
+}
+
 bool MyRender::Draw()
 {
 	timer.Frame();
 	handleCamMove();
-	cam.Render(timer.GetFrameTime());
+	auto frameTime = timer.GetFrameTime();
+	cam.Render(frameTime);
 
 	XMMATRIX viewMatrix = cam.GetViewMatrix();
 	frustum.ConstructFrustum(1000, m_Projection, viewMatrix);
@@ -137,29 +191,16 @@ bool MyRender::Draw()
 
 	player->Draw(viewMatrix);
 	
-	if(fireBalls.size() > 0)
-	{
-		list<FireBall*> delFireballs;
-		for (FireBall* fireBall : fireBalls)
-
-		{
-			fireBall->UpdatePos(timer.GetFrameTime());
-			fireBall->Draw(viewMatrix);
-			if(fireBall->lifeTime < 0)
-			{
-				delFireballs.push_front(fireBall);
-			}
-		}
-		for (FireBall* fireBall : delFireballs)
-		{
-			fireBalls.remove(fireBall);
-			delete fireBall;
-		}
-	}
+	
 	
 
 	TurnZBufferOff();
 	TurnOnAlphaBlending();
+
+	updateAndDrawFireBalls(viewMatrix);
+	torchParticleGenerator->Update(frameTime, player->GetTorchLight()->position, 2);
+	torchParticleGenerator->Draw(viewMatrix);
+	
 
 	std::wstring t = L"Сфер на экране: " + intToStr(renderCount);
 	
@@ -192,3 +233,31 @@ Player* MyRender::GetPlayer()
 	return player;
 }
 
+XMFLOAT3 MyRender::GetWorldCords(int x, int y)
+{
+	XMMATRIX m = XMMatrixInverse(NULL, cam.GetViewMatrix());
+
+	XMFLOAT3 v;
+	v.x = (((2.0f * x) / GetWidth()) - 1) / XMVectorGetByIndex( GetProjection().r[0], 0);
+	v.y = -(((2.0f * y) / GetHeight()) - 1) / XMVectorGetByIndex(GetProjection().r[1], 1);
+	v.z = 1.0f;
+
+	XMVECTOR vPickRayDir = XMVectorSet(
+		v.x * XMVectorGetByIndex(m.r[0], 0) + v.y * XMVectorGetByIndex(m.r[1], 0) + v.z * XMVectorGetByIndex(m.r[2], 0),
+		v.x * XMVectorGetByIndex(m.r[0], 1) + v.y * XMVectorGetByIndex(m.r[1], 1) + v.z * XMVectorGetByIndex(m.r[2], 1),
+		v.x * XMVectorGetByIndex(m.r[0], 2) + v.y * XMVectorGetByIndex(m.r[1], 2) + v.z * XMVectorGetByIndex(m.r[2], 2),
+		1
+	);
+
+	XMVECTOR vPickRayOrig = XMVectorSet(
+		XMVectorGetByIndex(m.r[3], 0),
+		XMVectorGetByIndex(m.r[3], 1),
+		XMVectorGetByIndex(m.r[3], 2),
+		0
+	);
+
+	XMVECTOR N = XMVectorSet(0.0f, 1.0f, 0.0f, 0); // Пересечение с плоскостью
+	auto t = -XMVector3Dot(vPickRayOrig, N) / XMVector3Dot(vPickRayDir, N);
+	auto result = vPickRayOrig + vPickRayDir * t;
+	return XMFLOAT3(XMVectorGetByIndex(result, 0), 0, XMVectorGetByIndex(result, 2));
+}

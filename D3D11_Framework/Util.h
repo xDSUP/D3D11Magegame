@@ -46,6 +46,11 @@ inline float convertDegreeToRad(float d)
 	return d * 0.0174532925f;
 }
 
+inline float convertRadToDegree(float d)
+{
+	return d / 0.0174532925f;
+}
+
 
 inline XMMATRIX XM_CALLCONV InverseTranspose(DirectX::FXMMATRIX M)
 {

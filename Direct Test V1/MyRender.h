@@ -7,6 +7,7 @@
 #include "Frustum.h"
 #include "Model.h"
 #include "ModelList.h"
+#include "ParticleGenerator.h"
 #include "Player.h"
 #include "Timer.h"
 
@@ -16,7 +17,11 @@ class MyRender : public Render
 {
 public:
 	MyRender();
+	void initLight();
 	bool Init();
+	unsigned int lastUsedParticle = 0;
+	
+	
 	bool Draw();
 	void Close();
 
@@ -63,11 +68,11 @@ public:
 	void AddFireBallToRender(FireBall* fireball)
 	{
 		fireBalls.push_back(fireball);
+		AddPointLight(fireball->light);
 	}
-
-
 	
 	Player* GetPlayer();
+	XMFLOAT3 GetWorldCords(int x, int y);
 
 private:
 	ModelList	modelList;
@@ -79,6 +84,7 @@ private:
 	Player* player;
 	StaticMesh* mesh;
 	list<FireBall*> fireBalls;
+	ParticleGenerator* torchParticleGenerator;
 
 	BitmapFont* font;
 	Text*		textNumSphere;
@@ -94,4 +100,5 @@ private:
 	bool		turnRightCam;
 
 	void handleCamMove();
+	void updateAndDrawFireBalls(XMMATRIX viewMatrix);
 };

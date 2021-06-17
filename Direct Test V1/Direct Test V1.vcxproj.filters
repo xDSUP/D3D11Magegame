@@ -22,6 +22,9 @@
     <Filter Include="Render">
       <UniqueIdentifier>{d02beddf-f408-4fb4-8e7c-42ff7cf90eac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\staticObj">
+      <UniqueIdentifier>{12f10019-da40-461d-8944-a17653bf2b41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputHandler.cpp">
@@ -54,6 +57,9 @@
     </ClCompile>
     <ClCompile Include="FireBallGenerator.cpp">
       <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleGenerator.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +96,9 @@
     <ClInclude Include="FireBallGenerator.h">
       <Filter>Models</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleGenerator.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -117,7 +126,9 @@
     <None Include="LightHelper.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Basic.hlsli" />
+    <None Include="Basic.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="texture.png">
@@ -164,23 +175,29 @@
     <FxCompile Include="MeshVS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="BitmapFontPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="BitmapFontVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="imagePS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="imageVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Basic_PS_3D.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Basic_VS_3D.hlsl">
       <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticlePS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="ParticleVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="BitmapFontPS.hlsl">
+      <Filter>Shaders\staticObj</Filter>
+    </FxCompile>
+    <FxCompile Include="BitmapFontVS.hlsl">
+      <Filter>Shaders\staticObj</Filter>
+    </FxCompile>
+    <FxCompile Include="imagePS.hlsl">
+      <Filter>Shaders\staticObj</Filter>
+    </FxCompile>
+    <FxCompile Include="imageVS.hlsl">
+      <Filter>Shaders\staticObj</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

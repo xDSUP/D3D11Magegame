@@ -57,6 +57,17 @@ namespace D3D11Framework
 		float pad; // 最后用一个浮点数填充使得该结构体大小满足16的倍数，便于我们以后在HLSL设置数组
 	};
 
+	class PointLightCont
+	{
+	public:
+		PointLightCont(PointLight light)
+		{
+			//memcpy_s(&cbPS.pointLight[i], sizeof(PointLight), &l->light, sizeof(PointLight));
+			this->light = light;
+		}
+		PointLight light;
+	};
+
 	// 聚光灯
 	struct SpotLight
 	{

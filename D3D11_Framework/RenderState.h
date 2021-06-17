@@ -16,6 +16,7 @@ namespace D3D11Framework
 		void TurnZBufferOff();
 
 		void TurnOnAlphaBlending();
+		void TurnOnAlphaAddBlending();
 		void TurnOffAlphaBlending();
 
 	private:
@@ -30,6 +31,7 @@ namespace D3D11Framework
 		ID3D11DepthStencilState *m_pDepthDisabledStencilState;
 		ID3D11BlendState *m_pAlphaEnableBlendingState;
 		ID3D11BlendState *m_pAlphaDisableBlendingState;
+		ID3D11BlendState* m_pAlphaEnableAddBlendingState;
 
 		ID3D11SamplerState *m_pSampleState;
 

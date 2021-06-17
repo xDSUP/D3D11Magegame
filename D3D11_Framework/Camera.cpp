@@ -21,7 +21,6 @@ Camera::Camera(): viewMatrix(), rightMoveSpeed(0),
 void Camera::Render(float time)
 {
 	frameTime = time;
-	rot.z = 0;
 	float radians = rot.y * 0.0174532925f;
 	float radiansRight = (rot.y + 90) * 0.0174532925f;
 	float radiansZ = rot.z * 0.0174532925f;
@@ -29,7 +28,7 @@ void Camera::Render(float time)
 	pos.x += sinf(radiansRight) * (rightMoveSpeed - leftMoveSpeed) + sinf(radians) * (forwardMoveSpeed - backMoveSpeed);
 	pos.y += upMoveSpeed - downMoveSpeed;
 	pos.z += cosf(radians) * (forwardMoveSpeed - backMoveSpeed) + cosf(radiansRight) * (rightMoveSpeed - leftMoveSpeed);
-	sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, radians);
+	//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, radians);
 
 	
 	float lAtx = sinf(radians) + pos.x;

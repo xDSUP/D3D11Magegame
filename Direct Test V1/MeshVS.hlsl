@@ -15,7 +15,7 @@ VertexPosHWNormalTex main(VertexInputType input)
 	//float4 posW = mul(float4(input.pos, 1.0f), g_World);
 
 	vOut.PosH = mul(input.pos, WVP);
-	vOut.PosW = mul(input.pos, g_World);
+	vOut.PosW = mul(input.pos, g_World).xyz;
 	vOut.NormalW = mul(input.normal, (float3x3) g_WorldInvTranspose);
 	vOut.Tex = input.tex;
 	return vOut;

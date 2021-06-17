@@ -36,7 +36,7 @@ void MovableGameObject::TurnLeft(bool keydown)
 {
 	if (keydown)
 	{
-		leftTurnSpeed += frameTime * speedTurn;;
+		leftTurnSpeed += frameTime * speedTurn;
 
 		checkMaxTurnSpeed(leftTurnSpeed);
 	}

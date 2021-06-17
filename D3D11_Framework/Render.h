@@ -37,6 +37,11 @@ namespace D3D11Framework
 		void TurnOnAlphaBlending();
 		void TurnOffAlphaBlending();
 
+		XMMATRIX GetProjection()
+		{
+			return m_Projection;
+		}
+		
 		ID3D11DeviceContext* GetContext() const
 		{
 			return m_pImmediateContext;
@@ -52,14 +57,30 @@ namespace D3D11Framework
 			return m_DirectionalLights;
 		}
 
-		PointLight* GetPointLights()  
+		std::list<PointLightCont*> GetPointLights()
 		{
 			return m_PointLights;
+		}
+
+		void AddPointLight(PointLight light)
+		{
+			m_PointLights.push_back(new PointLightCont(light));
 		}
 
 		SpotLight* GetSpotLights() 
 		{
 			return m_SpotLights;
+		}
+
+
+		unsigned GetWidth() const
+		{
+			return m_width;
+		}
+
+		unsigned GetHeight() const
+		{
+			return m_height;
 		}
 
 		int NumDirLight() const
@@ -69,7 +90,7 @@ namespace D3D11Framework
 
 		int NumPointLight() const
 		{
-			return numPointLight;
+			return m_PointLights.size();
 		}
 
 		int NumSpotLight() const
@@ -101,7 +122,7 @@ namespace D3D11Framework
 		RenderState *m_renderstate;
 
 		DirectionalLight m_DirectionalLights[4];
-		PointLight m_PointLights[10];
+		std::list<PointLightCont*> m_PointLights;
 		SpotLight m_SpotLights[4];
 		int numDirLight;
 		int numPointLight;

@@ -4,7 +4,7 @@ SamplerState sampleType;
 
 struct PixelInputType
 {
-    float4 pos : SV_POSITION;
+    float4 Pos : SV_POSITION;
     float2 tex : TEXCOORD;
 };
 
