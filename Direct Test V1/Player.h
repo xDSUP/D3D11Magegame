@@ -21,9 +21,9 @@ public:
 		
 		torchLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
 		torchLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
-		torchLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
-		torchLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		torchLight.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
+		torchLight.diffuse = XMFLOAT4(1.0f, 0.55f, 0.0f, 1.0f);
+		torchLight.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		torchLight.att = XMFLOAT3(0.0f, 0.1f, 0.2f);
 		//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
 		torchLight.range = 10.0f;
 		torchPos = XMFLOAT3(-1, 4, 1);

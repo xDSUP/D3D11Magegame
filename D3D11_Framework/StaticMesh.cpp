@@ -91,57 +91,57 @@ void StaticMesh::m_RenderBuffers()
 void StaticMesh::m_SetShaderParameters(CXMMATRIX viewmatrix)
 {
 	XMMATRIX WVP = m_objMatrix * viewmatrix * m_render->m_Projection;
-	
-	VSConstantBuffer cb;
-	cb.world = XMMatrixTranspose(m_objMatrix);
-	cb.WVP = XMMatrixTranspose(WVP);
-	cb.worldInvTranspose = XMMatrixTranspose(InverseTranspose(m_objMatrix));
-	m_render->m_pImmediateContext->UpdateSubresource( m_VSConstantBuffer, 0, NULL, &cb, 0, 0 );
-	m_render->m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_VSConstantBuffer);
 
 	
-	PSConstantBuffer cbPS;
+	vsConstantBuffer.world = XMMatrixTranspose(m_objMatrix);
+	vsConstantBuffer.WVP = XMMatrixTranspose(WVP);
+	vsConstantBuffer.worldInvTranspose = XMMatrixTranspose(InverseTranspose(m_objMatrix));
+	m_render->m_pImmediateContext->UpdateSubresource( m_VSConstantBuffer, 0, NULL, &vsConstantBuffer, 0, 0 );
+	
+
+	
+	
 	for (size_t i = 0; i < m_render->NumDirLight(); i++)
-		cbPS.dirLight[i] = m_render->GetDirectionalLights()[i];
+		psConstantBuffer.dirLight[i] = m_render->GetDirectionalLights()[i];
 
 	int i = 0;
 	for (auto l : m_render->GetPointLights())
 	{
-		memcpy_s(&cbPS.pointLight[i], sizeof(PointLight), &l->light, sizeof(PointLight));
+		memcpy_s(&psConstantBuffer.pointLight[i], sizeof(PointLight), &l->light, sizeof(PointLight));
 		i++;
 	}
 	
 	for (size_t i = 0; i < m_render->NumSpotLight(); i++)
-		cbPS.spotLight[i] = m_render->GetSpotLights()[i];
+		psConstantBuffer.spotLight[i] = m_render->GetSpotLights()[i];
 	
-	cbPS.numDirLight = m_render->NumDirLight();
-	cbPS.numPointLight = m_render->NumPointLight();
-	cbPS.numSpotLight = m_render->NumSpotLight();
+	psConstantBuffer.numDirLight = m_render->NumDirLight();
+	psConstantBuffer.numPointLight = m_render->NumPointLight();
+	psConstantBuffer.numSpotLight = m_render->NumSpotLight();
 
 	if(m_material.diffuse.x > 0)
 	{
-		cbPS.material.ambient = m_material.ambient;
-		cbPS.material.diffuse =	m_material.diffuse;
-		cbPS.material.specular = m_material.specular;
-		cbPS.material.reflect = m_material.reflect;
+		psConstantBuffer.material.ambient = m_material.ambient;
+		psConstantBuffer.material.diffuse =	m_material.diffuse;
+		psConstantBuffer.material.specular = m_material.specular;
+		psConstantBuffer.material.reflect = m_material.reflect;
 	}
 	else
 	{
 		//cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-		cbPS.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		cbPS.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
+		psConstantBuffer.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		psConstantBuffer.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		psConstantBuffer.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
 	}
 	
-	auto pos = m_render->GetCam()->GetPosition();
-	cbPS.eyePos = XMFLOAT4(pos.x, pos.y, pos.z, 0);
+	psConstantBuffer.eyePos = m_render->GetCam()->GetPosition();
 
 	D3D11_MAPPED_SUBRESOURCE mappedData;
 	HR(m_render->m_pImmediateContext->Map(m_PSConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedData));
-	memcpy_s(mappedData.pData, sizeof(PSConstantBuffer), &cbPS, sizeof(PSConstantBuffer));
+	memcpy_s(mappedData.pData, sizeof(PSConstantBuffer), &psConstantBuffer, sizeof(PSConstantBuffer));
 	m_render->m_pImmediateContext->Unmap(m_PSConstantBuffer, 0);
 
-	
+
+	m_render->m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_VSConstantBuffer);
 	m_render->m_pImmediateContext->PSSetConstantBuffers(1, 1, &m_PSConstantBuffer);
 }
 

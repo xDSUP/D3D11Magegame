@@ -30,9 +30,9 @@ namespace D3D11Framework
 		float numPointLight;
 		float numSpotLight;
 		Material material;
-		XMFLOAT4 eyePos;
+		XMFLOAT3 eyePos;
 		float pad1;
-		//float pad2;
+		float pad2;
 	};
 	
 		
@@ -82,6 +82,8 @@ namespace D3D11Framework
 		ID3D11Buffer *m_indexBuffer;
 		ID3D11Buffer *m_VSConstantBuffer;
 		ID3D11Buffer* m_PSConstantBuffer;
+		PSConstantBuffer psConstantBuffer;
+		VSConstantBuffer vsConstantBuffer;
 		Shader *m_shader;
 
 		Material m_material;
