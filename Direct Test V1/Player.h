@@ -20,10 +20,10 @@ public:
 		this->render = render;
 		
 		torchLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
-		torchLight.ambient = XMFLOAT4(0.4f, 0.8f, 0.4f, 1.0f);
-		torchLight.diffuse = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-		torchLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
-		torchLight.att = XMFLOAT3(1.0f, 0.1f, 0.0f);
+		torchLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+		torchLight.diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
+		torchLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
+		torchLight.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
 		//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
 		torchLight.range = 10.0f;
 		torchPos = XMFLOAT3(-1, 4, 1);
@@ -59,9 +59,12 @@ public:
 		lightPos *= XMMatrixRotationAxis(v, rad);
 		lightPos *= XMMatrixTranslation(pos.x, pos.y, pos.z);
 
-		torchLight.position.x = pos.x + torchPos.x;
-		torchLight.position.y = pos.y + torchPos.y;
-		torchLight.position.z = pos.z + torchPos.z;
+		//torchLight.position.x = pos.x + torchPos.x;
+		//torchLight.position.y = pos.y + torchPos.y;
+		//torchLight.position.z = pos.z + torchPos.z;
+		torchLight.position.x = XMVectorGetByIndex(lightPos.r[3], 0);
+		torchLight.position.y = XMVectorGetByIndex(lightPos.r[3], 1);
+		torchLight.position.z = XMVectorGetByIndex(lightPos.r[3], 2);
 		
 		//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", pos.x, pos.y, pos.z, rot.y);
 		//sLog->Debug("Xpos:%lf | Ypos:%lf | Zpos: %lf rad: %lf", torchPos.x, torchPos.y, torchPos.z);

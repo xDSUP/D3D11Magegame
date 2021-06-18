@@ -10,10 +10,10 @@ public:
 	void Init()
 	{
 		light.position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		light.ambient = XMFLOAT4(0.4f, 0.8f, 0.4f, 1.0f);
+		light.ambient = XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f);
 		light.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		light.specular = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		light.att = XMFLOAT3(0.0f, 0.1f, 0.0f);
+		light.att = XMFLOAT3(0.1f, 0.6f, 1.0f);
 		//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
 		light.range = 10.0f;
 	}

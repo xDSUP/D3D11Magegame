@@ -29,14 +29,14 @@ void MyRender::initLight()
 	m_DirLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 	m_DirLight.direction = XMFLOAT3(-0.577f, -0.577f, 0.577f);
 	m_DirectionalLights[0] = m_DirLight;
-	numDirLight = 1;
+	numDirLight = 0;
 
 	PointLight m_PointLight;
 	m_PointLight.position = XMFLOAT3(0.0f, 0.0f, -10.0f);
 	m_PointLight.ambient = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
 	m_PointLight.diffuse = XMFLOAT4(0.5f, 0.2f, 0.2f, 1.0f);
-	m_PointLight.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
-	m_PointLight.att = XMFLOAT3(0.8f, 0.1f, 0.0f);
+	m_PointLight.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+	m_PointLight.att = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//m_PointLight.color = XMFLOAT3(0.5f, 0.1f, 0.0f);
 	m_PointLight.range = 25.0f;
 	
@@ -54,7 +54,7 @@ void MyRender::initLight()
 	m_SpotLight.spot = 12.0f;
 	m_SpotLight.range = 10000.0f;
 	m_SpotLights[0] = m_SpotLight;
-	numSpotLight = 1;
+	numSpotLight = 0;
 }
 
 bool MyRender::Init()
@@ -72,8 +72,8 @@ bool MyRender::Init()
 	player = new Player();
 	player->InitModel(this, "grim.obj");
 	player->SetSpeedTurn(2);
-	player->SetSpeedMove(1);
-	player->SetMaxFrameTime(1);
+	player->SetSpeedMove(2);
+	player->SetMaxFrameTime(1.2);
 	player->SetPosition(0, 0.2, 0);
 	
 	font = new BitmapFont(this);
@@ -190,18 +190,16 @@ bool MyRender::Draw()
 	labirint->Draw(viewMatrix);
 
 	player->Draw(viewMatrix);
-	
-	
-	
+	updateAndDrawFireBalls(viewMatrix);
 
-	TurnZBufferOff();
+	
 	TurnOnAlphaBlending();
 
-	updateAndDrawFireBalls(viewMatrix);
+	
 	torchParticleGenerator->Update(frameTime, player->GetTorchLight()->position, 2);
 	torchParticleGenerator->Draw(viewMatrix);
 	
-
+	TurnZBufferOff();
 	std::wstring t = L"Сфер на экране: " + intToStr(renderCount);
 	
 	textNumSphere->SetText(t);

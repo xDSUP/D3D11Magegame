@@ -131,7 +131,7 @@ void ParticleGenerator::RespawnParticle(Particle& particle, XMFLOAT3 objectPos, 
 
 	XMStoreFloat4(&(particle.Position), pos);
 	particle.Color = XMFLOAT4(rColor, rColor, rColor, 0.5f);
-	particle.Life = 100.0f;
+	particle.Life = 150.0f;
 	particle.Velocity = XMFLOAT4(velosity.x, velosity.y, velosity.z, 1);
 }
 
@@ -185,5 +185,5 @@ void ParticleGenerator::m_SetShaderParameters(CXMMATRIX WVP, XMFLOAT4 color)
 void ParticleGenerator::m_RenderShader()
 {
 	shader->Draw();
-	render->GetContext()->DrawIndexed(6, 0, 0);
+	render->GetContext()->DrawIndexed(3, 0, 0);
 }

@@ -127,9 +127,10 @@ void StaticMesh::m_SetShaderParameters(CXMMATRIX viewmatrix)
 	}
 	else
 	{
+		//cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 		cbPS.material.ambient = XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f);
 		cbPS.material.diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		cbPS.material.specular = XMFLOAT4(0.2f, 0.2f, 0.2f, 5.0f);
+		cbPS.material.specular = XMFLOAT4(0.5f, 0.5f, 0.5f, 5.0f);
 	}
 	
 	auto pos = m_render->GetCam()->GetPosition();

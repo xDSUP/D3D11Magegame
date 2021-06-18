@@ -23,7 +23,8 @@ PixelInputType main(VertexInputType input)
 {
 	PixelInputType output;
 
-	output.Pos = mul(float4(input.Pos,1), WVP) + offset;
+	//output.Pos = mul(float4(input.Pos,1), WVP) + offset;
+	output.Pos = float4(1, 1, 0, 1);
 	output.Tex = input.Tex;
 	output.Color = color;
 
